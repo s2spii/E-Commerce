@@ -1,0 +1,75 @@
+# =============================================================================
+#  Maison Luma — reproducible local / staging environment
+#  Brings up: PostgreSQL, Redis, the API and the Next.js storefront.
+#  Usage: cp .env.example .env && docker compose up --build
+# =============================================================================
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-luma}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-luma}
+      POSTGRES_DB: ${POSTGRES_DB:-luma}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-luma}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-luma}:${POSTGRES_PASSWORD:-luma}@db:5432/${POSTGRES_DB:-luma}?schema=public
+      REDIS_URL: redis://redis:6379
+    env_file:
+      - .env
+    ports:
+      - "${API_PORT:-4000}:4000"
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      NEXT_PUBLIC_API_URL: ${API_URL:-http://localhost:4000}
+    env_file:
+      - .env
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+
+volumes:
+  db_data:
+  redis_data:
