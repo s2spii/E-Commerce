@@ -1,0 +1,29 @@
+{
+  "name": "maison-luma",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Maison Luma — premium niche e-commerce platform (full-stack, secure, tax-aware).",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "workspaces": [
+    "server",
+    "web"
+  ],
+  "scripts": {
+    "dev": "concurrently -n api,web -c blue,magenta \"npm:dev -w server\" \"npm:dev -w web\"",
+    "build": "npm run build -w server && npm run build -w web",
+    "lint": "npm run lint -w server && npm run lint -w web",
+    "test": "npm run test -w server",
+    "db:migrate": "npm run db:migrate -w server",
+    "db:seed": "npm run db:seed -w server",
+    "sbom": "cyclonedx-npm --output-file sbom.json --output-format json",
+    "audit": "npm audit --omit=dev --audit-level=high"
+  },
+  "devDependencies": {
+    "@cyclonedx/cyclonedx-npm": "^1.19.3",
+    "concurrently": "^8.2.2"
+  }
+}
