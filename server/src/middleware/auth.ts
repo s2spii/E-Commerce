@@ -8,9 +8,10 @@ import { verifyAccessToken } from '../modules/auth/tokens';
 function extractToken(req: Request): string | null {
   const header = req.headers.authorization;
   if (header?.startsWith('Bearer ')) return header.slice(7).trim();
-  // Fall back to an HttpOnly cookie for browser sessions.
-  const cookie = (req as Request & { cookies?: Record<string, string> }).cookies?.access_token;
-  return cookie ?? null;
+  // Fall back to the signed HttpOnly cookie for browser sessions.
+  const signed = (req as Request & { signedCookies?: Record<string, string> }).signedCookies;
+  const plain = (req as Request & { cookies?: Record<string, string> }).cookies;
+  return signed?.access_token ?? plain?.access_token ?? null;
 }
 
 /**
