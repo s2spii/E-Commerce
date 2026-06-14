@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: ['**']
+
+# Least-privilege default token.
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Dummy value: Prisma `generate`/`tsc` never connect, but expect the var.
+  DATABASE_URL: postgresql://luma:luma@localhost:5432/luma?schema=public
+
+jobs:
+  backend:
+    name: Backend — lint · typecheck · test · build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Generate Prisma client
+        run: npm run db:generate -w server
+      - name: Lint
+        run: npm run lint -w server
+      - name: Typecheck
+        run: npm run typecheck -w server
+      - name: Unit tests
+        run: npm run test -w server
+      - name: Build
+        run: npm run build -w server
+
+  frontend:
+    name: Frontend — lint · build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Lint
+        run: npm run lint -w web --if-present
+      - name: Build
+        run: npm run build -w web
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:4000
+
+  security:
+    name: Security — audit · SBOM
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Audit production dependencies (fail on high+)
+        run: npm audit --omit=dev --audit-level=high
+      - name: Generate SBOM (CycloneDX)
+        run: npx --yes @cyclonedx/cyclonedx-npm --omit dev --output-file sbom.json --output-format json
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom.json
+          retention-days: 30
