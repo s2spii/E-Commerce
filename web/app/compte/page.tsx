@@ -30,7 +30,7 @@ export default function AccountPage() {
 
       <div className="grid gap-10 lg:grid-cols-[1fr_320px]">
         {/* Profile card */}
-        <section className="space-y-6 border border-line bg-surface p-8">
+        <section className="space-y-6 rounded-3xl border border-line bg-surface p-8 shadow-soft">
           <h2 className="text-2xl">Mes informations</h2>
           <dl className="space-y-4 text-sm">
             <Detail label="Nom" value={fullName || '—'} />
@@ -43,7 +43,7 @@ export default function AccountPage() {
 
         {/* Actions */}
         <aside className="space-y-4">
-          <div className="border border-line bg-surface p-8">
+          <div className="rounded-3xl border border-line bg-surface p-8 shadow-soft">
             <h3 className="mb-4 text-xl">Mes commandes</h3>
             <p className="mb-5 text-sm text-muted">Consultez l&apos;historique et le suivi de vos commandes.</p>
             <Button href="/compte/commandes" variant="secondary" fullWidth>

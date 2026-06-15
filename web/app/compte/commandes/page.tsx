@@ -60,12 +60,12 @@ export default function OrdersPage() {
           </Button>
         </EmptyState>
       ) : (
-        <div className="divide-y divide-line border-y border-line">
+        <div className="space-y-3">
           {orders.map((order) => (
             <Link
               key={order.id}
               href={`/compte/commandes/${order.id}`}
-              className="flex flex-col gap-3 py-6 transition-colors hover:bg-surface sm:flex-row sm:items-center sm:justify-between"
+              className="flex flex-col gap-3 rounded-2xl border border-line bg-surface px-6 py-5 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/40 hover:shadow-lift sm:flex-row sm:items-center sm:justify-between"
             >
               <div>
                 <p className="font-serif text-lg">{order.number}</p>

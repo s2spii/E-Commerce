@@ -3,22 +3,27 @@
 @tailwind utilities;
 
 /* ---------------------------------------------------------------------------
-   Maison Luma — base premium styles
+   Maison Luma — "Modern Luxe" foundation
    --------------------------------------------------------------------------- */
 
 @layer base {
   :root {
-    --color-ivory: #faf8f4;
-    --color-ink: #1a1a1a;
+    --color-ivory: #faf7f1;
+    --color-sand: #f2ece1;
+    --color-ink: #1a1714;
+    --color-noir: #0e0c0a;
     --color-gold: #b8924a;
-    --color-line: #e7e2d8;
-    --color-muted: #6b6b6b;
+    --color-champagne: #e2c892;
+    --color-line: #e8e1d4;
+    --color-muted: #736b5e;
   }
 
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     scroll-behavior: smooth;
+    /* Account for the sticky header when jumping to anchors. */
+    scroll-padding-top: 7rem;
   }
 
   body {
@@ -26,6 +31,11 @@
     color: var(--color-ink);
     font-family: var(--font-sans), system-ui, sans-serif;
     line-height: 1.6;
+    /* A whisper of warmth + grain layered behind the ivory base. */
+    background-image:
+      radial-gradient(60rem 60rem at 85% -10%, rgba(226, 200, 146, 0.16), transparent 60%),
+      radial-gradient(50rem 50rem at -10% 10%, rgba(184, 146, 74, 0.08), transparent 55%);
+    background-attachment: fixed;
   }
 
   h1,
@@ -35,16 +45,48 @@
     font-family: var(--font-serif), Georgia, serif;
     font-weight: 500;
     letter-spacing: 0.01em;
+    text-wrap: balance;
+  }
+
+  /* Fluid display sizes — graceful from phone to desktop. */
+  .display-1 {
+    font-size: clamp(2.75rem, 7vw, 5.75rem);
+    line-height: 1.02;
+  }
+  .display-2 {
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    line-height: 1.08;
   }
 
   /* Accessible focus ring in the brand accent. */
   *:focus-visible {
     outline: 2px solid var(--color-gold);
-    outline-offset: 2px;
+    outline-offset: 3px;
+    border-radius: 2px;
   }
 
   ::selection {
-    background-color: rgba(184, 146, 74, 0.18);
+    background-color: rgba(184, 146, 74, 0.22);
+    color: var(--color-ink);
+  }
+
+  /* Refined, on-brand scrollbar. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-gold) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(184, 146, 74, 0.55);
+    border-radius: 999px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-gold);
   }
 }
 
@@ -56,22 +98,97 @@
 
   /* Thin uppercase label used for eyebrows and section kickers. */
   .eyebrow {
-    @apply text-xs uppercase tracking-widest text-gold;
+    @apply text-xs uppercase tracking-luxe text-gold;
   }
 
-  /* Underline-on-hover navigation link. */
+  /* Animated underline navigation link. */
   .nav-link {
     @apply relative text-sm tracking-wide text-ink transition-colors duration-300 hover:text-gold;
   }
-
-  /* Standard form input. */
-  .input-luxe {
-    @apply w-full border border-line bg-surface px-4 py-3 text-sm text-ink transition-colors focus:border-gold focus:outline-none;
+  .nav-link::after {
+    content: '';
+    @apply absolute -bottom-1 left-0 h-px w-full origin-right scale-x-0 bg-gold transition-transform duration-300 ease-spring;
+  }
+  .nav-link:hover::after,
+  .nav-link[data-active='true']::after {
+    @apply origin-left scale-x-100;
   }
 
-  /* Standard form select. */
+  /* Form controls with a soft, animated focus state. */
+  .input-luxe {
+    @apply w-full rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink shadow-sm transition-all duration-300 placeholder:text-muted/60 focus:border-gold focus:shadow-gold focus:outline-none;
+  }
   .select-luxe {
-    @apply w-full border border-line bg-surface px-4 py-3 text-sm text-ink transition-colors focus:border-gold focus:outline-none;
+    @apply w-full rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink shadow-sm transition-all duration-300 focus:border-gold focus:outline-none;
+  }
+
+  /* Surface card with depth + lift-on-hover. */
+  .card-luxe {
+    @apply rounded-2xl border border-line bg-surface shadow-soft transition-all duration-500 ease-spring;
+  }
+  .card-luxe:hover {
+    @apply -translate-y-1 shadow-lift;
+  }
+
+  /* Gold gradient text (animated sheen). */
+  .text-gradient-gold {
+    @apply bg-gold-gradient bg-clip-text text-transparent;
+    background-size: 200% auto;
+    @apply animate-gradient;
+  }
+
+  /* Hairline divider with a gold center accent. */
+  .rule-gold {
+    @apply h-px w-16 bg-gradient-to-r from-transparent via-gold to-transparent;
+  }
+}
+
+@layer utilities {
+  /* Scroll-reveal primitives — toggled by the <Reveal> component. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+      opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+  .reveal-left {
+    transform: translateX(-32px);
+  }
+  .reveal-right {
+    transform: translateX(32px);
+  }
+  .reveal-scale {
+    transform: scale(0.94);
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Skeleton shimmer for loading states. */
+  .skeleton {
+    @apply rounded-xl bg-line/60;
+    background-image: linear-gradient(
+      100deg,
+      transparent 20%,
+      rgba(255, 255, 255, 0.65) 50%,
+      transparent 80%
+    );
+    background-size: 200% 100%;
+    @apply animate-shimmer;
+  }
+
+  /* Subtle film grain overlay helper for dramatic noir sections. */
+  .grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.5;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
   }
 }
 
@@ -83,4 +200,22 @@ input[type='number']::-webkit-inner-spin-button {
 }
 input[type='number'] {
   -moz-appearance: textfield;
+}
+
+/* Respect users who prefer less motion — disable all decorative movement. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }

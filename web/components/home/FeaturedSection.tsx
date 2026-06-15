@@ -5,7 +5,8 @@ import { api } from '@/lib/api';
 import type { ProductListResponse, ProductSummary } from '@/lib/types';
 import { ProductCard } from '@/components/ProductCard';
 import { Button } from '@/components/Button';
-import { Spinner } from '@/components/Spinner';
+import { Reveal } from '@/components/Reveal';
+import { ProductGridSkeleton } from '@/components/Skeleton';
 
 /** "Sélection" — featured products fetched client-side. */
 export function FeaturedSection() {
@@ -33,19 +34,20 @@ export function FeaturedSection() {
   }, []);
 
   return (
-    <section className="container-luxe py-20">
-      <div className="mb-10 flex flex-col items-center text-center">
-        <span className="eyebrow">La Sélection</span>
-        <h2 className="mt-3 text-4xl">Pièces d&apos;exception</h2>
-        <p className="mt-3 max-w-xl text-sm text-muted">
+    <section className="container-luxe py-24">
+      <Reveal className="mb-12 flex flex-col items-center text-center">
+        <span className="eyebrow eyebrow-center before:hidden">La Sélection</span>
+        <h2 className="mt-4 text-4xl sm:text-5xl">
+          Pièces d&apos;<span className="text-gradient-gold">exception</span>
+        </h2>
+        <p className="mt-4 max-w-xl text-sm text-muted">
           Une curation confidentielle de nos créations les plus désirées.
         </p>
-      </div>
+        <span className="rule-gold mt-7" />
+      </Reveal>
 
       {loading ? (
-        <div className="flex justify-center py-10">
-          <Spinner />
-        </div>
+        <ProductGridSkeleton count={6} />
       ) : error ? (
         <p className="text-center text-sm text-muted">
           La sélection est momentanément indisponible.
@@ -54,17 +56,19 @@ export function FeaturedSection() {
         <p className="text-center text-sm text-muted">Aucune pièce en vedette pour le moment.</p>
       ) : (
         <div className="grid grid-cols-2 gap-x-6 gap-y-12 lg:grid-cols-3">
-          {products.map((p) => (
-            <ProductCard key={p.id} product={p} />
+          {products.map((p, i) => (
+            <Reveal key={p.id} delay={(i % 3) * 120} direction="up">
+              <ProductCard product={p} />
+            </Reveal>
           ))}
         </div>
       )}
 
-      <div className="mt-14 flex justify-center">
+      <Reveal className="mt-16 flex justify-center" delay={120}>
         <Button href="/boutique" variant="secondary">
           Découvrir la boutique
         </Button>
-      </div>
+      </Reveal>
     </section>
   );
 }

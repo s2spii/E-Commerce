@@ -76,9 +76,12 @@ export default function AdminDashboardPage() {
       {/* Stat cards */}
       <div className="grid grid-cols-2 gap-5 lg:grid-cols-5">
         {cards.map((card) => (
-          <div key={card.label} className="border border-line bg-surface p-6">
+          <div
+            key={card.label}
+            className="rounded-2xl border border-line bg-surface p-6 shadow-soft transition-all duration-500 ease-spring hover:-translate-y-1 hover:shadow-lift"
+          >
             <p className="text-xs uppercase tracking-widest text-muted">{card.label}</p>
-            <p className="mt-3 font-serif text-3xl text-ink">{card.value}</p>
+            <p className="mt-3 font-serif text-3xl text-gradient-gold">{card.value}</p>
           </div>
         ))}
       </div>
@@ -89,12 +92,12 @@ export default function AdminDashboardPage() {
         {stats.recentOrders.length === 0 ? (
           <p className="text-sm text-muted">Aucune commande récente.</p>
         ) : (
-          <div className="divide-y divide-line border-y border-line">
+          <div className="space-y-3">
             {stats.recentOrders.map((order) => (
               <Link
                 key={order.id}
                 href={`/compte/commandes/${order.id}`}
-                className="flex items-center justify-between gap-4 py-4 transition-colors hover:bg-surface"
+                className="flex items-center justify-between gap-4 rounded-2xl border border-line bg-surface px-6 py-4 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/40 hover:shadow-lift"
               >
                 <div>
                   <p className="font-serif text-lg">{order.number}</p>

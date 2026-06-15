@@ -10,6 +10,7 @@ import { Button } from '@/components/Button';
 import { QuantityStepper } from '@/components/QuantityStepper';
 import { PageSpinner } from '@/components/Spinner';
 import { EmptyState } from '@/components/EmptyState';
+import { Reveal } from '@/components/Reveal';
 import { useCart } from '@/context/CartContext';
 
 export default function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -120,18 +121,19 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
       <div className="grid gap-12 lg:grid-cols-2">
         {/* Gallery */}
         <div>
-          <div className="relative aspect-[3/4] w-full overflow-hidden bg-line/40">
+          <div className="group relative aspect-[3/4] w-full overflow-hidden rounded-3xl bg-sand shadow-lift">
             {images[activeImage]?.url ? (
               <Image
+                key={activeImage}
                 src={images[activeImage].url}
                 alt={images[activeImage].alt ?? product.name}
                 fill
                 priority
                 sizes="(min-width: 1024px) 50vw, 100vw"
-                className="object-cover"
+                className="animate-fade-in object-cover transition-transform duration-[1200ms] ease-spring group-hover:scale-105"
               />
             ) : (
-              <div className="flex h-full items-center justify-center text-xs uppercase tracking-widest text-muted">
+              <div className="flex h-full items-center justify-center text-xs uppercase tracking-luxe text-muted">
                 Maison Luma
               </div>
             )}
@@ -143,8 +145,10 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
                   key={`${img.url}-${i}`}
                   type="button"
                   onClick={() => setActiveImage(i)}
-                  className={`relative aspect-square w-20 overflow-hidden border ${
-                    i === activeImage ? 'border-gold' : 'border-line'
+                  className={`relative aspect-square w-20 overflow-hidden rounded-xl border-2 transition-all duration-300 ${
+                    i === activeImage
+                      ? 'border-gold shadow-gold'
+                      : 'border-transparent opacity-70 hover:opacity-100'
                   }`}
                   aria-label={`Voir l'image ${i + 1}`}
                 >
@@ -158,7 +162,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
         </div>
 
         {/* Details */}
-        <div>
+        <div className="lg:sticky lg:top-28 lg:h-fit">
           {product.brand ? (
             <p className="text-xs uppercase tracking-widest text-muted">{product.brand}</p>
           ) : null}
@@ -171,13 +175,13 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
             </p>
           ) : null}
 
-          <div className="mt-5 text-2xl text-ink">
+          <div className="mt-5 text-3xl font-medium text-ink">
             <Price
               amount={displayPrice}
               currency={product.currency}
               compareAt={selectedVariant?.compareAtPrice}
             />
-            <span className="ml-2 text-xs uppercase tracking-widest text-muted">TTC</span>
+            <span className="ml-2 align-middle text-xs uppercase tracking-widest text-muted">TTC</span>
           </div>
 
           {product.description ? (
@@ -198,11 +202,11 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
                       type="button"
                       disabled={disabled}
                       onClick={() => setSelectedVariantId(v.id)}
-                      className={`border px-4 py-2 text-sm transition-colors ${
+                      className={`rounded-full border px-5 py-2.5 text-sm transition-all duration-300 ${
                         selected
-                          ? 'border-gold text-gold'
-                          : 'border-line text-ink hover:border-ink'
-                      } ${disabled ? 'cursor-not-allowed text-muted line-through opacity-60' : ''}`}
+                          ? 'border-gold bg-gold/10 text-gold shadow-sm'
+                          : 'border-line text-ink hover:-translate-y-0.5 hover:border-ink'
+                      } ${disabled ? 'cursor-not-allowed text-muted line-through opacity-60 hover:translate-y-0' : ''}`}
                     >
                       {v.name || v.sku}
                     </button>
@@ -226,9 +230,9 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
           </div>
 
           {added ? (
-            <p className="mt-4 text-sm text-gold">
-              Ajouté au panier.{' '}
-              <Link href="/panier" className="underline underline-offset-4">
+            <p className="animate-fade-up mt-5 inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-2 text-sm text-gold">
+              <span aria-hidden>✓</span> Ajouté au panier.{' '}
+              <Link href="/panier" className="font-medium underline underline-offset-4">
                 Voir le panier
               </Link>
             </p>
@@ -245,20 +249,21 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
 
       {/* Story */}
       {product.story ? (
-        <section className="mx-auto mt-24 max-w-3xl text-center">
-          <span className="eyebrow">L&apos;histoire</span>
-          <h2 className="mt-3 text-3xl">Le récit de la pièce</h2>
+        <Reveal as="section" className="mx-auto mt-28 max-w-3xl text-center">
+          <span className="eyebrow eyebrow-center before:hidden">L&apos;histoire</span>
+          <h2 className="mt-4 text-3xl sm:text-4xl">Le récit de la pièce</h2>
+          <span className="rule-gold mx-auto mt-6" />
           <div className="mt-6 space-y-4 text-left text-sm leading-relaxed text-muted">
             {product.story.split('\n').filter(Boolean).map((para, i) => (
               <p key={i}>{para}</p>
             ))}
           </div>
-        </section>
+        </Reveal>
       ) : null}
 
       {/* Reviews */}
-      <section className="mx-auto mt-24 max-w-3xl">
-        <h2 className="mb-8 text-center text-3xl">Avis</h2>
+      <Reveal as="section" className="mx-auto mt-28 max-w-3xl">
+        <h2 className="mb-8 text-center text-3xl sm:text-4xl">Avis</h2>
         {product.reviews.length === 0 ? (
           <p className="text-center text-sm text-muted">
             Aucun avis pour le moment. Soyez le premier à partager le vôtre.
@@ -277,7 +282,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
             ))}
           </ul>
         )}
-      </section>
+      </Reveal>
     </div>
   );
 }

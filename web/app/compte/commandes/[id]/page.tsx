@@ -128,7 +128,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         </section>
 
         {/* Totals */}
-        <aside className="h-fit space-y-3 border border-line bg-surface p-7 text-sm">
+        <aside className="h-fit space-y-3 rounded-3xl border border-line bg-surface p-7 text-sm shadow-soft lg:sticky lg:top-28">
           <h2 className="mb-2 text-2xl">Récapitulatif</h2>
           <Row label="Sous-total HT" value={formatPrice(order.subtotalExclTax, order.currency)} />
           {order.discountTotal > 0 ? (

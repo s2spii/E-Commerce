@@ -75,12 +75,15 @@ export default function NotreMaisonPage() {
 
   return (
     <article className="container-luxe max-w-3xl py-20">
-      <header className="mb-12 text-center">
-        <span className="eyebrow">Notre Maison</span>
-        <h1 className="mt-3 text-5xl leading-tight">{page?.title ?? 'Notre Maison'}</h1>
+      <header className="animate-fade-up mb-12 text-center">
+        <span className="eyebrow eyebrow-center before:hidden">Notre Maison</span>
+        <h1 className="mt-4 text-5xl leading-tight sm:text-6xl">
+          {page?.title ?? 'Notre Maison'}
+        </h1>
+        <span className="rule-gold mx-auto mt-7" />
       </header>
 
-      <div>
+      <div className="animate-fade-up" style={{ animationDelay: '0.15s' }}>
         {page?.content ? (
           renderContent(page.content)
         ) : (

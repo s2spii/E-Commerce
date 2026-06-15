@@ -21,11 +21,13 @@ export function QuantityStepper({
   const clamp = (n: number) => Math.max(min, Math.min(max, n));
 
   return (
-    <div className={`inline-flex items-center border border-line bg-surface ${className}`}>
+    <div
+      className={`inline-flex items-center rounded-full border border-line bg-surface shadow-sm ${className}`}
+    >
       <button
         type="button"
         aria-label="Diminuer la quantité"
-        className="px-3 py-2 text-ink transition-colors hover:text-gold disabled:opacity-40"
+        className="flex h-10 w-10 items-center justify-center rounded-full text-lg text-ink transition-colors hover:text-gold disabled:opacity-30"
         onClick={() => onChange(clamp(value - 1))}
         disabled={disabled || value <= min}
       >
@@ -35,7 +37,7 @@ export function QuantityStepper({
         type="number"
         inputMode="numeric"
         aria-label="Quantité"
-        className="w-12 border-x border-line bg-transparent py-2 text-center text-sm text-ink focus:outline-none"
+        className="w-10 bg-transparent py-2 text-center text-sm font-medium tabular-nums text-ink focus:outline-none"
         value={value}
         min={min}
         max={max}
@@ -48,7 +50,7 @@ export function QuantityStepper({
       <button
         type="button"
         aria-label="Augmenter la quantité"
-        className="px-3 py-2 text-ink transition-colors hover:text-gold disabled:opacity-40"
+        className="flex h-10 w-10 items-center justify-center rounded-full text-lg text-ink transition-colors hover:text-gold disabled:opacity-30"
         onClick={() => onChange(clamp(value + 1))}
         disabled={disabled || value >= max}
       >
