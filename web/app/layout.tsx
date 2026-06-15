@@ -5,8 +5,11 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { AnnouncementBar } from '@/components/AnnouncementBar';
 import { ScrollProgress } from '@/components/ScrollProgress';
+import { CartDrawer } from '@/components/CartDrawer';
+import { CookieBanner } from '@/components/CookieBanner';
 import { AuthProvider } from '@/context/AuthContext';
 import { CartProvider } from '@/context/CartContext';
+import { CartUIProvider } from '@/context/CartUIContext';
 
 // Serif display for headings, Inter for body/UI. Exposed as CSS variables and
 // wired into the Tailwind theme (see tailwind.config.ts).
@@ -38,11 +41,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="flex min-h-screen flex-col">
         <AuthProvider>
           <CartProvider>
-            <ScrollProgress />
-            <AnnouncementBar />
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
+            <CartUIProvider>
+              <ScrollProgress />
+              <AnnouncementBar />
+              <Header />
+              <main className="flex-1">{children}</main>
+              <Footer />
+              <CartDrawer />
+              <CookieBanner />
+            </CartUIProvider>
           </CartProvider>
         </AuthProvider>
       </body>

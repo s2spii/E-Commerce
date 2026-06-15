@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { useCart } from '@/context/CartContext';
+import { useCartUI } from '@/context/CartUIContext';
 import { useAuth } from '@/context/AuthContext';
 
 const NAV_LINKS = [
@@ -13,6 +14,7 @@ const NAV_LINKS = [
 
 export function Header() {
   const { count } = useCart();
+  const { openCart } = useCartUI();
   const { profile } = useAuth();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -118,10 +120,11 @@ export function Header() {
             <UserIcon />
             <span className="hidden lg:inline">{profile ? 'Compte' : 'Connexion'}</span>
           </Link>
-          <Link
-            href="/panier"
+          <button
+            type="button"
+            onClick={openCart}
             className="group relative inline-flex items-center gap-2 text-ink transition-colors hover:text-gold"
-            aria-label={`Panier, ${count} article${count > 1 ? 's' : ''}`}
+            aria-label={`Ouvrir le panier, ${count} article${count > 1 ? 's' : ''}`}
           >
             <span className="relative">
               <BagIcon />
@@ -134,7 +137,7 @@ export function Header() {
               </span>
             </span>
             <span className="hidden text-sm tracking-wide lg:inline">Panier</span>
-          </Link>
+          </button>
         </div>
       </div>
 
