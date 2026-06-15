@@ -202,6 +202,26 @@ input[type='number'] {
   -moz-appearance: textfield;
 }
 
+/* Keyboard skip-to-content link — hidden until focused. */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 100;
+  transform: translateY(-160%);
+  border-radius: 9999px;
+  background-color: var(--color-ink);
+  color: var(--color-ivory);
+  padding: 0.6rem 1.1rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: transform 0.25s ease;
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+
 /* ---------------------------------------------------------------------------
    Legal / editorial long-form content (Mentions légales, CGV, RGPD…)
    --------------------------------------------------------------------------- */

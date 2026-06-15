@@ -11,13 +11,19 @@ import { QuantityStepper } from '@/components/QuantityStepper';
 import { PageSpinner } from '@/components/Spinner';
 import { EmptyState } from '@/components/EmptyState';
 import { Reveal } from '@/components/Reveal';
+import { Lightbox } from '@/components/Lightbox';
+import { WishlistButton } from '@/components/WishlistButton';
+import { Accordion } from '@/components/Accordion';
+import { RecentlyViewed } from '@/components/RecentlyViewed';
 import { useCart } from '@/context/CartContext';
 import { useCartUI } from '@/context/CartUIContext';
+import { useRecentlyViewed } from '@/lib/useRecentlyViewed';
 
 export default function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
   const { addItem } = useCart();
   const { openCart } = useCartUI();
+  const { track } = useRecentlyViewed();
 
   const [product, setProduct] = useState<ProductDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -26,6 +32,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
   const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
   const [activeImage, setActiveImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   const [adding, setAdding] = useState(false);
   const [added, setAdded] = useState(false);
@@ -40,6 +47,8 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
         const res = await api<ProductDetail>(`/catalog/products/${slug}`);
         if (!active) return;
         setProduct(res);
+        setActiveImage(0);
+        setQuantity(1);
         // Default to the first in-stock variant, else the first variant.
         const firstAvailable = res.variants.find((v) => v.stock > 0) ?? res.variants[0];
         setSelectedVariantId(firstAvailable?.id ?? null);
@@ -66,6 +75,20 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
     const sum = product.reviews.reduce((a, r) => a + r.rating, 0);
     return sum / product.reviews.length;
   }, [product]);
+
+  // Remember this product for the "Vu récemment" strip.
+  useEffect(() => {
+    if (!product) return;
+    track({
+      id: product.id,
+      slug: product.slug,
+      name: product.name,
+      image: product.images[0]?.url ?? null,
+      brand: product.brand,
+      fromPrice: product.variants[0]?.price ?? null,
+      currency: product.currency,
+    });
+  }, [product, track]);
 
   const handleAdd = async () => {
     if (!selectedVariant) return;
@@ -124,7 +147,12 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
       <div className="grid gap-12 lg:grid-cols-2">
         {/* Gallery */}
         <div>
-          <div className="group relative aspect-[3/4] w-full overflow-hidden rounded-3xl bg-sand shadow-lift">
+          <button
+            type="button"
+            onClick={() => images[activeImage]?.url && setLightboxOpen(true)}
+            className="group relative block aspect-[3/4] w-full cursor-zoom-in overflow-hidden rounded-3xl bg-sand text-left shadow-lift"
+            aria-label="Agrandir l'image"
+          >
             {images[activeImage]?.url ? (
               <Image
                 key={activeImage}
@@ -140,7 +168,14 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
                 Maison Luma
               </div>
             )}
-          </div>
+            {images[activeImage]?.url ? (
+              <span className="absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-ivory/90 text-ink opacity-0 shadow-soft backdrop-blur transition-opacity duration-300 group-hover:opacity-100">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
+                  <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
+            ) : null}
+          </button>
           {images.length > 1 ? (
             <div className="mt-4 flex gap-3">
               {images.map((img, i) => (
@@ -257,6 +292,18 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
                 </>
               )}
             </Button>
+            <WishlistButton
+              variant="pill"
+              product={{
+                id: product.id,
+                slug: product.slug,
+                name: product.name,
+                image: product.images[0]?.url ?? null,
+                brand: product.brand,
+                fromPrice: product.variants[0]?.price ?? null,
+                currency: product.currency,
+              }}
+            />
           </div>
 
           {cartError ? <p className="mt-4 text-sm text-red-700">{cartError}</p> : null}
@@ -266,6 +313,25 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
               Plus que {selectedVariant.stock} en stock
             </p>
           ) : null}
+
+          <div className="mt-10">
+            <Accordion
+              items={[
+                {
+                  q: 'Livraison & retours',
+                  a: 'Livraison soignée offerte dès 200 € en France métropolitaine, préparée sous 1 à 2 jours ouvrés. Retours acceptés sous 14 jours.',
+                },
+                {
+                  q: 'Paiement & sécurité',
+                  a: 'Paiement 100 % sécurisé et chiffré de bout en bout. Vos données sont protégées conformément au RGPD.',
+                },
+                {
+                  q: 'Authenticité & savoir-faire',
+                  a: 'Chaque pièce est choisie pour la qualité de sa fabrication et façonnée par des maisons d’exception, dans le respect du geste juste.',
+                },
+              ]}
+            />
+          </div>
         </div>
       </div>
 
@@ -305,6 +371,16 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
           </ul>
         )}
       </Reveal>
+
+      <RecentlyViewed currentId={product.id} />
+
+      <Lightbox
+        images={images}
+        index={activeImage}
+        open={lightboxOpen}
+        onIndexChange={setActiveImage}
+        onClose={() => setLightboxOpen(false)}
+      />
     </div>
   );
 }

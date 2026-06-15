@@ -56,6 +56,7 @@ function BoutiqueContent() {
   const [pagination, setPagination] = useState<Pagination | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showFilters, setShowFilters] = useState(false);
 
   // Keep local state in sync if the URL changes (e.g. category link from home).
   useEffect(() => {
@@ -160,9 +161,26 @@ function BoutiqueContent() {
         </h1>
       </header>
 
+      {/* Mobile filter toggle */}
+      <button
+        type="button"
+        onClick={() => setShowFilters((v) => !v)}
+        aria-expanded={showFilters}
+        className="mb-6 flex w-full items-center justify-center gap-2 rounded-full border border-line py-3 text-xs uppercase tracking-widest text-ink transition-colors hover:border-gold hover:text-gold lg:hidden"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
+          <path d="M3 5h18M6 12h12M10 19h4" strokeLinecap="round" />
+        </svg>
+        {showFilters ? 'Masquer les filtres' : 'Filtrer & trier'}
+      </button>
+
       <div className="grid gap-10 lg:grid-cols-[280px_1fr]">
         {/* Filters */}
-        <aside className="h-fit space-y-8 rounded-3xl border border-line bg-surface/70 p-6 shadow-soft lg:sticky lg:top-28 lg:backdrop-blur">
+        <aside
+          className={`h-fit space-y-8 rounded-3xl border border-line bg-surface/70 p-6 shadow-soft lg:sticky lg:top-28 lg:block lg:backdrop-blur ${
+            showFilters ? 'block' : 'hidden'
+          }`}
+        >
           <div>
             <label className="eyebrow mb-3 block" htmlFor="search">
               Recherche
@@ -250,6 +268,42 @@ function BoutiqueContent() {
 
         {/* Results */}
         <section>
+          {hasActiveFilters ? (
+            <div className="mb-6 flex flex-wrap items-center gap-2">
+              {filters.q ? (
+                <Chip label={`« ${filters.q} »`} onRemove={() => update({ q: '' })} />
+              ) : null}
+              {filters.category ? (
+                <Chip
+                  label={categories.find((c) => c.slug === filters.category)?.name ?? filters.category}
+                  onRemove={() => update({ category: '' })}
+                />
+              ) : null}
+              {filters.minPrice || filters.maxPrice ? (
+                <Chip
+                  label={`${filters.minPrice || '0'} – ${filters.maxPrice || '∞'} €`}
+                  onRemove={() => update({ minPrice: '', maxPrice: '' })}
+                />
+              ) : null}
+              {filters.inStock ? (
+                <Chip label="En stock" onRemove={() => update({ inStock: false })} />
+              ) : null}
+              {filters.sort !== 'newest' ? (
+                <Chip
+                  label={filters.sort === 'name' ? 'Nom (A-Z)' : 'En vedette'}
+                  onRemove={() => update({ sort: 'newest' })}
+                />
+              ) : null}
+              <button
+                type="button"
+                onClick={reset}
+                className="ml-1 text-xs uppercase tracking-widest text-gold underline-offset-4 hover:underline"
+              >
+                Tout effacer
+              </button>
+            </div>
+          ) : null}
+
           <div className="mb-6 flex items-center justify-between">
             <p className="text-sm text-muted">
               {pagination ? `${pagination.total} pièce${pagination.total > 1 ? 's' : ''}` : ' '}
@@ -325,6 +379,24 @@ function BoutiqueContent() {
         </section>
       </div>
     </div>
+  );
+}
+
+function Chip({ label, onRemove }: { label: string; onRemove: () => void }) {
+  return (
+    <span className="inline-flex items-center gap-2 rounded-full border border-line bg-surface py-1.5 pl-3.5 pr-2 text-xs text-ink shadow-sm">
+      {label}
+      <button
+        type="button"
+        onClick={onRemove}
+        aria-label={`Retirer le filtre ${label}`}
+        className="flex h-4 w-4 items-center justify-center rounded-full text-muted transition-colors hover:bg-sand hover:text-gold"
+      >
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+          <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />
+        </svg>
+      </button>
+    </span>
   );
 }
 

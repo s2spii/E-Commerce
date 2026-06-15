@@ -1,5 +1,11 @@
 User-agent: *
 Allow: /
 
-# Ajoutez ici votre sitemap lorsqu'il sera disponible :
-# Sitemap: https://maisonluma.example/sitemap.xml
+# Pages privées / transactionnelles exclues de l'indexation
+Disallow: /panier
+Disallow: /commande
+Disallow: /compte
+Disallow: /admin
+
+# Remplacez le domaine par le vôtre en production :
+Sitemap: https://maisonluma.example/sitemap.xml

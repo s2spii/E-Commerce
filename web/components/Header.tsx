@@ -6,6 +6,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { useCartUI } from '@/context/CartUIContext';
 import { useAuth } from '@/context/AuthContext';
+import { useWishlist } from '@/context/WishlistContext';
+import { SearchOverlay } from '@/components/SearchOverlay';
 
 const NAV_LINKS = [
   { href: '/boutique', label: 'Boutique' },
@@ -16,13 +18,27 @@ export function Header() {
   const { count } = useCart();
   const { openCart } = useCartUI();
   const { profile } = useAuth();
+  const { count: wishCount } = useWishlist();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [bump, setBump] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const prevCount = useRef(count);
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+
+  // ⌘K / Ctrl-K opens the search overlay.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
 
   // Collapse / solidify the bar once the page is scrolled.
   useEffect(() => {
@@ -111,7 +127,27 @@ export function Header() {
         </Link>
 
         {/* Right utilities */}
-        <div className="flex items-center gap-5 sm:gap-6">
+        <div className="flex items-center gap-4 sm:gap-5">
+          <button
+            type="button"
+            onClick={() => setSearchOpen(true)}
+            className="text-ink transition-colors hover:text-gold"
+            aria-label="Rechercher (Ctrl K)"
+          >
+            <SearchIcon />
+          </button>
+          <Link
+            href="/favoris"
+            className="relative hidden text-ink transition-colors hover:text-gold sm:inline-flex"
+            aria-label={`Favoris, ${wishCount} article${wishCount > 1 ? 's' : ''}`}
+          >
+            <HeartIcon />
+            {wishCount > 0 ? (
+              <span className="absolute -right-2 -top-2 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-gold-gradient px-1 text-[9px] font-medium tabular-nums text-noir shadow-sm">
+                {wishCount}
+              </span>
+            ) : null}
+          </Link>
           <Link
             href={profile ? '/compte' : '/connexion'}
             className="nav-link hidden items-center gap-2 sm:inline-flex"
@@ -148,23 +184,41 @@ export function Header() {
         }`}
       >
         <nav className="container-luxe flex flex-col gap-1 py-5">
-          {[...NAV_LINKS, { href: profile ? '/compte' : '/connexion', label: profile ? 'Compte' : 'Connexion' }].map(
-            (link, i) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setOpen(false)}
-                style={{ transitionDelay: open ? `${80 + i * 60}ms` : '0ms' }}
-                className={`border-b border-line/60 py-3 font-serif text-2xl text-ink transition-all duration-500 ease-spring hover:text-gold ${
-                  open ? 'translate-x-0 opacity-100' : '-translate-x-3 opacity-0'
-                }`}
-              >
-                {link.label}
-              </Link>
-            ),
-          )}
+          <button
+            type="button"
+            onClick={() => {
+              setOpen(false);
+              setSearchOpen(true);
+            }}
+            style={{ transitionDelay: open ? '60ms' : '0ms' }}
+            className={`flex items-center gap-3 border-b border-line/60 py-3 text-left font-serif text-2xl text-ink transition-all duration-500 ease-spring hover:text-gold ${
+              open ? 'translate-x-0 opacity-100' : '-translate-x-3 opacity-0'
+            }`}
+          >
+            <SearchIcon />
+            Rechercher
+          </button>
+          {[
+            ...NAV_LINKS,
+            { href: '/favoris', label: 'Favoris' },
+            { href: profile ? '/compte' : '/connexion', label: profile ? 'Compte' : 'Connexion' },
+          ].map((link, i) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={() => setOpen(false)}
+              style={{ transitionDelay: open ? `${140 + i * 60}ms` : '0ms' }}
+              className={`border-b border-line/60 py-3 font-serif text-2xl text-ink transition-all duration-500 ease-spring hover:text-gold ${
+                open ? 'translate-x-0 opacity-100' : '-translate-x-3 opacity-0'
+              }`}
+            >
+              {link.label}
+            </Link>
+          ))}
         </nav>
       </div>
+
+      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
     </header>
   );
 }
@@ -183,6 +237,27 @@ function UserIcon() {
     <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
       <circle cx="12" cy="8" r="3.5" />
       <path d="M5 20a7 7 0 0 1 14 0" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function SearchIcon() {
+  return (
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
+      <circle cx="11" cy="11" r="7" />
+      <path d="m20 20-3.5-3.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function HeartIcon() {
+  return (
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
+      <path
+        d="M12 20s-7-4.5-9.5-9A4.6 4.6 0 0 1 12 6a4.6 4.6 0 0 1 9.5 5c-2.5 4.5-9.5 9-9.5 9Z"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
