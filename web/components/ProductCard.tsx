@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Price } from '@/components/Price';
+import { WishlistButton } from '@/components/WishlistButton';
 import type { ProductSummary } from '@/lib/types';
 
 /** Editorial product tile used across the home and shop grids. */
@@ -36,6 +37,19 @@ export function ProductCard({ product }: { product: ProductSummary }) {
             Épuisé
           </span>
         ) : null}
+
+        <WishlistButton
+          product={{
+            id: product.id,
+            slug: product.slug,
+            name: product.name,
+            image: product.image,
+            brand: product.brand,
+            fromPrice: product.fromPrice,
+            currency: product.currency,
+          }}
+          className="absolute right-3 top-3"
+        />
       </div>
 
       <div className="mt-4 space-y-1">
