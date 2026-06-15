@@ -1,5 +1,4 @@
 import { Prisma, type OrderStatus } from '@prisma/client';
-import { env } from '../../config/env';
 import { BadRequestError, ForbiddenError, NotFoundError } from '../../lib/errors';
 import { prisma } from '../../lib/prisma';
 import { priceCheckout, type PricingLine } from '../checkout/pricing';
