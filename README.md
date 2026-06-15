@@ -56,9 +56,9 @@ sur une base technique solide, maintenable et scalable. Le projet est un **monor
 cp .env.example .env          # puis renseignez des secrets RÉELS
 docker compose up --build     # db + redis + api + web
 
-# Dans un autre terminal : initialiser le schéma et les données de démo
-docker compose exec api npx prisma migrate deploy
-docker compose exec api npm run db:seed
+# Les migrations s'appliquent automatiquement au démarrage de l'API.
+# Charger les données de démo (catalogue + super admin) :
+docker compose exec api node dist/seed.js
 ```
 
 - Boutique : http://localhost:3000

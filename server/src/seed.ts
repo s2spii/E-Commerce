@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
 import { PrismaClient } from '@prisma/client';
 import argon2 from 'argon2';
-import { ALL_PERMISSIONS, SYSTEM_ROLES } from '../src/config/permissions';
-import { DEFAULT_TAX_RATES } from '../src/modules/tax/tax.data';
-import { slugify } from '../src/lib/slug';
+import { ALL_PERMISSIONS, SYSTEM_ROLES } from './config/permissions';
+import { DEFAULT_TAX_RATES } from './modules/tax/tax.data';
+import { slugify } from './lib/slug';
 
 const prisma = new PrismaClient();
 
