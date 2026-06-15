@@ -6,7 +6,10 @@
 // =============================================================================
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  // Bundle the engine for the Docker runtime (node:20-bookworm-slim = Debian 12,
+  // OpenSSL 3) alongside the local dev target so the image works out of the box.
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
