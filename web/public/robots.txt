@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Ajoutez ici votre sitemap lorsqu'il sera disponible :
+# Sitemap: https://maisonluma.example/sitemap.xml
