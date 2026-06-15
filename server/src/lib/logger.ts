@@ -22,7 +22,20 @@ export const logger = pino({
     ],
     censor: '[REDACTED]',
   },
-  transport: env.isProd
-    ? undefined
-    : { target: 'pino-pretty', options: { colorize: true, translateTime: 'SYS:HH:MM:ss' } },
+  transport: prettyTransport(),
 });
+
+/**
+ * Use pino-pretty for human-readable logs in dev, but only if it is installed.
+ * Production (and the pruned Docker image) falls back to structured JSON instead
+ * of crashing when the optional dev dependency is absent.
+ */
+function prettyTransport(): pino.TransportSingleOptions | undefined {
+  if (env.isProd) return undefined;
+  try {
+    require.resolve('pino-pretty');
+    return { target: 'pino-pretty', options: { colorize: true, translateTime: 'SYS:HH:MM:ss' } };
+  } catch {
+    return undefined;
+  }
+}

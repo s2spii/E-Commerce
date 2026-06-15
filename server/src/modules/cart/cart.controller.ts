@@ -18,7 +18,7 @@ export const cartContextQuery = z.object({
 const CART_COOKIE = 'cart_token';
 const cookieOpts: CookieOptions = {
   httpOnly: true,
-  secure: env.isProd,
+  secure: env.cookieSecure,
   sameSite: 'lax',
   signed: true,
   maxAge: 30 * 24 * 60 * 60 * 1000,

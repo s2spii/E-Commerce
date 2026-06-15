@@ -43,6 +43,10 @@ const schema = z.object({
 
   STRIPE_SECRET_KEY: z.string().optional().default(''),
   STRIPE_WEBHOOK_SECRET: z.string().optional().default(''),
+
+  // Overrides the `Secure` cookie flag. Defaults to true in production; set
+  // false to run the stack over plain HTTP locally (e.g. Docker on localhost).
+  COOKIE_SECURE: z.enum(['true', 'false']).optional(),
 });
 
 const parsed = schema.safeParse(process.env);
@@ -74,6 +78,8 @@ export const env = {
   ...data,
   isProd: data.NODE_ENV === 'production',
   isTest: data.NODE_ENV === 'test',
+  // Secure cookies follow COOKIE_SECURE when set, else production status.
+  cookieSecure: data.COOKIE_SECURE ? data.COOKIE_SECURE === 'true' : data.NODE_ENV === 'production',
   corsOrigins: data.CORS_ORIGINS.split(',').map((s) => s.trim()).filter(Boolean),
 };
 

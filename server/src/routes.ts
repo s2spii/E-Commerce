@@ -18,9 +18,12 @@ apiRouter.get('/health', (_req: Request, res: Response) => {
 });
 
 // CSRF token priming: the csrf middleware sets the `csrf_token` cookie on this
-// (safe) request so the SPA can read and resubmit it on state-changing calls.
-apiRouter.get('/csrf', (_req: Request, res: Response) => {
-  res.json({ data: { ok: true } });
+// (safe) request. We also return the token in the body so a cross-origin SPA
+// (which cannot read the API's cookie via document.cookie) can echo it in the
+// `x-csrf-token` header for the double-submit check.
+apiRouter.get('/csrf', (req: Request, res: Response) => {
+  const token = (req as Request & { cookies?: Record<string, string> }).cookies?.csrf_token;
+  res.json({ data: { csrfToken: token } });
 });
 
 // Readiness — verifies the database is reachable.

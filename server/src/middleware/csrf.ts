@@ -39,7 +39,7 @@ export function csrfProtection(req: Request, res: Response, next: NextFunction):
     const token = newCsrfToken();
     res.cookie('csrf_token', token, {
       httpOnly: false, // must be readable by the SPA for the double submit
-      secure: env.isProd,
+      secure: env.cookieSecure,
       sameSite: 'lax',
       path: '/',
       maxAge: 24 * 60 * 60 * 1000,
