@@ -6,8 +6,10 @@ import { api } from '@/lib/api';
 import type { Category, ProductListResponse, ProductSummary, Pagination } from '@/lib/types';
 import { ProductCard } from '@/components/ProductCard';
 import { Spinner } from '@/components/Spinner';
+import { ProductGridSkeleton } from '@/components/Skeleton';
 import { EmptyState } from '@/components/EmptyState';
 import { Button } from '@/components/Button';
+import { Reveal } from '@/components/Reveal';
 
 type Sort = 'newest' | 'name' | 'featured';
 
@@ -151,14 +153,16 @@ function BoutiqueContent() {
 
   return (
     <div className="container-luxe py-14">
-      <header className="mb-10 border-b border-line pb-8 text-center">
-        <span className="eyebrow">La Boutique</span>
-        <h1 className="mt-3 text-5xl">Toutes nos pièces</h1>
+      <header className="mb-12 border-b border-line pb-10 text-center">
+        <span className="eyebrow eyebrow-center before:hidden">La Boutique</span>
+        <h1 className="mt-4 text-5xl sm:text-6xl">
+          Toutes nos <span className="text-gradient-gold italic">pièces</span>
+        </h1>
       </header>
 
-      <div className="grid gap-10 lg:grid-cols-[260px_1fr]">
+      <div className="grid gap-10 lg:grid-cols-[280px_1fr]">
         {/* Filters */}
-        <aside className="space-y-8">
+        <aside className="h-fit space-y-8 rounded-3xl border border-line bg-surface/70 p-6 shadow-soft lg:sticky lg:top-28 lg:backdrop-blur">
           <div>
             <label className="eyebrow mb-3 block" htmlFor="search">
               Recherche
@@ -169,7 +173,7 @@ function BoutiqueContent() {
               value={filters.q}
               onChange={(e) => update({ q: e.target.value })}
               placeholder="Rechercher…"
-              className="w-full border border-line bg-surface px-3 py-2 text-sm focus:border-gold focus:outline-none"
+              className="w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm shadow-sm transition-all focus:border-gold focus:shadow-gold focus:outline-none"
             />
           </div>
 
@@ -209,7 +213,7 @@ function BoutiqueContent() {
                 value={filters.minPrice}
                 onChange={(e) => update({ minPrice: e.target.value })}
                 placeholder="Min"
-                className="w-full border border-line bg-surface px-2 py-2 text-sm focus:border-gold focus:outline-none"
+                className="w-full rounded-xl border border-line bg-surface px-3 py-2.5 text-sm shadow-sm transition-all focus:border-gold focus:outline-none"
               />
               <span className="text-muted">—</span>
               <input
@@ -218,7 +222,7 @@ function BoutiqueContent() {
                 value={filters.maxPrice}
                 onChange={(e) => update({ maxPrice: e.target.value })}
                 placeholder="Max"
-                className="w-full border border-line bg-surface px-2 py-2 text-sm focus:border-gold focus:outline-none"
+                className="w-full rounded-xl border border-line bg-surface px-3 py-2.5 text-sm shadow-sm transition-all focus:border-gold focus:outline-none"
               />
             </div>
           </div>
@@ -255,7 +259,7 @@ function BoutiqueContent() {
               <select
                 value={filters.sort}
                 onChange={(e) => update({ sort: e.target.value as Sort })}
-                className="border border-line bg-surface px-3 py-2 text-sm focus:border-gold focus:outline-none"
+                className="rounded-xl border border-line bg-surface px-3 py-2 text-sm shadow-sm transition-all focus:border-gold focus:outline-none"
               >
                 <option value="newest">Nouveautés</option>
                 <option value="name">Nom (A-Z)</option>
@@ -265,9 +269,7 @@ function BoutiqueContent() {
           </div>
 
           {loading ? (
-            <div className="flex justify-center py-20">
-              <Spinner />
-            </div>
+            <ProductGridSkeleton count={9} />
           ) : error ? (
             <EmptyState title="Une erreur est survenue" description={error}>
               <Button variant="secondary" onClick={() => update({})}>
@@ -288,29 +290,31 @@ function BoutiqueContent() {
           ) : (
             <>
               <div className="grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-3">
-                {products.map((p) => (
-                  <ProductCard key={p.id} product={p} />
+                {products.map((p, i) => (
+                  <Reveal key={p.id} delay={(i % 3) * 90} direction="up">
+                    <ProductCard product={p} />
+                  </Reveal>
                 ))}
               </div>
 
               {totalPages > 1 ? (
-                <nav className="mt-14 flex items-center justify-center gap-4">
+                <nav className="mt-16 flex items-center justify-center gap-6">
                   <button
                     type="button"
                     disabled={filters.page <= 1}
                     onClick={() => update({ page: filters.page - 1 }, false)}
-                    className="text-xs uppercase tracking-widest text-ink transition-colors hover:text-gold disabled:opacity-30"
+                    className="rounded-full border border-line px-5 py-2.5 text-xs uppercase tracking-widest text-ink transition-all hover:-translate-y-0.5 hover:border-gold hover:text-gold disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:translate-y-0"
                   >
                     Précédent
                   </button>
-                  <span className="text-sm text-muted">
-                    Page {filters.page} / {totalPages}
+                  <span className="text-sm tabular-nums text-muted">
+                    {filters.page} <span className="text-line">/</span> {totalPages}
                   </span>
                   <button
                     type="button"
                     disabled={filters.page >= totalPages}
                     onClick={() => update({ page: filters.page + 1 }, false)}
-                    className="text-xs uppercase tracking-widest text-ink transition-colors hover:text-gold disabled:opacity-30"
+                    className="rounded-full border border-line px-5 py-2.5 text-xs uppercase tracking-widest text-ink transition-all hover:-translate-y-0.5 hover:border-gold hover:text-gold disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:translate-y-0"
                   >
                     Suivant
                   </button>

@@ -23,7 +23,7 @@ export default function CartPage() {
   if (!cart || cart.items.length === 0) {
     return (
       <div className="container-luxe py-20">
-        <h1 className="mb-10 text-center text-5xl">Votre panier</h1>
+        <h1 className="mb-10 text-center text-5xl sm:text-6xl">Votre panier</h1>
         <EmptyState
           title="Votre panier est vide"
           description="Découvrez notre sélection de pièces d'exception."
@@ -82,16 +82,22 @@ export default function CartPage() {
 
   return (
     <div className="container-luxe py-14">
-      <h1 className="mb-10 text-5xl">Votre panier</h1>
+      <header className="mb-10">
+        <span className="eyebrow">Votre sélection</span>
+        <h1 className="mt-3 text-5xl sm:text-6xl">Votre panier</h1>
+      </header>
 
       <div className="grid gap-12 lg:grid-cols-[1fr_380px]">
         {/* Line items */}
-        <div className="divide-y divide-line border-y border-line">
+        <div className="divide-y divide-line">
           {cart.items.map((item) => (
-            <div key={item.id} className="flex gap-5 py-6">
+            <div
+              key={item.id}
+              className="flex gap-5 rounded-2xl py-6 transition-colors hover:bg-surface/60"
+            >
               <Link
                 href={`/produit/${item.slug}`}
-                className="relative h-28 w-24 shrink-0 overflow-hidden bg-line/40"
+                className="relative h-28 w-24 shrink-0 overflow-hidden rounded-xl bg-sand shadow-sm"
               >
                 {item.image ? (
                   <Image src={item.image} alt={item.name} fill sizes="96px" className="object-cover" />
@@ -138,15 +144,15 @@ export default function CartPage() {
         </div>
 
         {/* Summary */}
-        <aside className="h-fit space-y-6 border border-line bg-surface p-7">
+        <aside className="h-fit space-y-6 rounded-3xl border border-line bg-surface p-7 shadow-soft lg:sticky lg:top-28">
           <h2 className="text-2xl">Récapitulatif</h2>
 
           {/* Coupon */}
           <div>
             <span className="eyebrow mb-2 block">Code promo</span>
             {cart.couponCode ? (
-              <div className="flex items-center justify-between border border-line px-3 py-2 text-sm">
-                <span className="uppercase tracking-wide text-ink">{cart.couponCode}</span>
+              <div className="flex items-center justify-between rounded-xl border border-gold/40 bg-gold/5 px-4 py-2.5 text-sm">
+                <span className="uppercase tracking-wide text-gold">{cart.couponCode}</span>
                 <button
                   type="button"
                   onClick={handleRemoveCoupon}
@@ -163,7 +169,7 @@ export default function CartPage() {
                   value={couponInput}
                   onChange={(e) => setCouponInput(e.target.value)}
                   placeholder="Votre code"
-                  className="flex-1 border border-line bg-ivory px-3 py-2 text-sm uppercase tracking-wide focus:border-gold focus:outline-none"
+                  className="flex-1 rounded-xl border border-line bg-ivory px-4 py-2.5 text-sm uppercase tracking-wide transition-all focus:border-gold focus:outline-none"
                 />
                 <Button size="sm" onClick={handleApplyCoupon} disabled={couponBusy}>
                   Appliquer

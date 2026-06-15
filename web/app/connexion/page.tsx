@@ -46,9 +46,9 @@ function LoginForm() {
 
   return (
     <div className="container-luxe flex justify-center py-20">
-      <div className="w-full max-w-md">
+      <div className="animate-fade-up w-full max-w-md rounded-3xl border border-line bg-surface/80 p-8 shadow-soft backdrop-blur sm:p-10">
         <div className="mb-8 text-center">
-          <span className="eyebrow">Espace client</span>
+          <span className="eyebrow eyebrow-center before:hidden">Espace client</span>
           <h1 className="mt-3 text-4xl">Connexion</h1>
         </div>
 

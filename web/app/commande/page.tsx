@@ -198,8 +198,10 @@ export default function CheckoutPage() {
               {(['B2C', 'B2B'] as CustomerType[]).map((type) => (
                 <label
                   key={type}
-                  className={`flex flex-1 cursor-pointer items-center gap-3 border px-4 py-3 text-sm transition-colors ${
-                    customerType === type ? 'border-gold text-gold' : 'border-line text-ink'
+                  className={`flex flex-1 cursor-pointer items-center gap-3 rounded-xl border px-4 py-3.5 text-sm transition-all duration-300 ${
+                    customerType === type
+                      ? 'border-gold bg-gold/10 text-gold shadow-sm'
+                      : 'border-line text-ink hover:border-ink'
                   }`}
                 >
                   <input
@@ -230,7 +232,7 @@ export default function CheckoutPage() {
         </div>
 
         {/* Summary */}
-        <aside className="h-fit space-y-6 border border-line bg-surface p-7">
+        <aside className="h-fit space-y-6 rounded-3xl border border-line bg-surface p-7 shadow-soft lg:sticky lg:top-28">
           <h2 className="text-2xl">Votre commande</h2>
 
           <ul className="space-y-3 border-b border-line pb-5 text-sm">

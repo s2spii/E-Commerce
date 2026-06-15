@@ -55,7 +55,7 @@ export function OrderTotals({ totals, currency = 'EUR', shipping }: OrderTotalsP
 
       <div className="flex items-baseline justify-between border-t border-line pt-4 text-base">
         <span className="font-serif text-lg">Total TTC</span>
-        <span className="font-serif text-lg text-ink">
+        <span className="font-serif text-2xl text-ink">
           {formatPrice(totals.grandTotal, currency)}
         </span>
       </div>
