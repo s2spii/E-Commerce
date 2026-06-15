@@ -38,7 +38,7 @@
     "pino": "^9.5.0",
     "pino-http": "^10.3.0",
     "qrcode": "^1.5.4",
-    "rate-limit-redis": "^4.2.0",
+    "rate-limit-redis": "^5.0.0",
     "redis": "^4.7.0",
     "zod": "^3.24.1"
   },
