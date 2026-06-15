@@ -168,7 +168,11 @@ async function main(): Promise<void> {
   await seedMarketing();
   console.log('\n✓ Seed complete.');
   console.log(`  Admin login: ${ADMIN_EMAIL}`);
-  console.log(`  Admin password: ${ADMIN_PASSWORD}  (change it immediately, then enable MFA)`);
+  // Never log the actual secret. Point operators to where it is configured.
+  console.log(
+    `  Admin password: ${process.env.SEED_ADMIN_PASSWORD ? 'value of $SEED_ADMIN_PASSWORD' : 'built-in dev default (see .env.example / README)'}`,
+  );
+  console.log('  → Change it immediately after first login, then enable MFA.');
 }
 
 main()

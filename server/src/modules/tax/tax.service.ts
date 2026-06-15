@@ -96,13 +96,19 @@ export async function validateVatNumber(vat: string): Promise<VatValidationResul
 
   const country = base.normalized.slice(0, 2);
   const number = base.normalized.slice(2);
+
+  // Defense-in-depth against SSRF: the host is constant, but we additionally
+  // constrain the user-derived path segments to a strict allow-list/charset and
+  // URL-encode them before they can reach the outbound request.
+  if (!/^[A-Z]{2}$/.test(country) || !isEuCountry(country) || !/^[0-9A-Za-z]{2,15}$/.test(number)) {
+    return base;
+  }
+  const viesUrl = `https://ec.europa.eu/taxation_customs/vies/rest-api/ms/${encodeURIComponent(country)}/vat/${encodeURIComponent(number)}`;
+
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 4000);
-    const res = await fetch(
-      `https://ec.europa.eu/taxation_customs/vies/rest-api/ms/${country}/vat/${number}`,
-      { signal: controller.signal },
-    );
+    const res = await fetch(viesUrl, { signal: controller.signal });
     clearTimeout(timeout);
     if (res.ok) {
       const body = (await res.json()) as { valid?: boolean };
