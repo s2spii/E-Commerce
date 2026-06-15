@@ -12,10 +12,12 @@ import { PageSpinner } from '@/components/Spinner';
 import { EmptyState } from '@/components/EmptyState';
 import { Reveal } from '@/components/Reveal';
 import { useCart } from '@/context/CartContext';
+import { useCartUI } from '@/context/CartUIContext';
 
 export default function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
   const { addItem } = useCart();
+  const { openCart } = useCartUI();
 
   const [product, setProduct] = useState<ProductDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -73,6 +75,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
     try {
       await addItem(selectedVariant.id, quantity);
       setAdded(true);
+      openCart();
       setTimeout(() => setAdded(false), 2500);
     } catch (err) {
       setCartError(err instanceof ApiError ? err.message : 'Ajout au panier impossible.');
@@ -224,19 +227,38 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
               max={selectedVariant ? Math.max(1, selectedVariant.stock) : 99}
               disabled={outOfStock}
             />
-            <Button onClick={handleAdd} disabled={adding || outOfStock} size="lg">
-              {outOfStock ? 'Épuisé' : adding ? 'Ajout…' : 'Ajouter au panier'}
+            <Button
+              onClick={handleAdd}
+              disabled={adding || outOfStock}
+              size="lg"
+              className="min-w-[210px]"
+            >
+              {outOfStock ? (
+                'Épuisé'
+              ) : adding ? (
+                <>
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                  Ajout…
+                </>
+              ) : added ? (
+                <>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+                    <path d="M20 6 9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  Ajouté
+                </>
+              ) : (
+                <>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
+                    <path d="M6 7h12l-1 13H7L6 7Z" strokeLinejoin="round" />
+                    <path d="M9 7a3 3 0 0 1 6 0" strokeLinecap="round" />
+                  </svg>
+                  Ajouter au panier
+                </>
+              )}
             </Button>
           </div>
 
-          {added ? (
-            <p className="animate-fade-up mt-5 inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-2 text-sm text-gold">
-              <span aria-hidden>✓</span> Ajouté au panier.{' '}
-              <Link href="/panier" className="font-medium underline underline-offset-4">
-                Voir le panier
-              </Link>
-            </p>
-          ) : null}
           {cartError ? <p className="mt-4 text-sm text-red-700">{cartError}</p> : null}
 
           {selectedVariant && selectedVariant.stock > 0 && selectedVariant.stock <= 5 ? (

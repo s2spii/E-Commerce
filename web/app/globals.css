@@ -202,6 +202,69 @@ input[type='number'] {
   -moz-appearance: textfield;
 }
 
+/* ---------------------------------------------------------------------------
+   Legal / editorial long-form content (Mentions légales, CGV, RGPD…)
+   --------------------------------------------------------------------------- */
+.legal-prose {
+  color: var(--color-muted);
+  font-size: 0.9375rem;
+  line-height: 1.75;
+}
+.legal-prose > * + * {
+  margin-top: 1rem;
+}
+.legal-prose h2 {
+  color: var(--color-ink);
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 1.6rem;
+  font-weight: 500;
+  margin-top: 2.75rem;
+}
+.legal-prose h3 {
+  color: var(--color-ink);
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-top: 1.75rem;
+}
+.legal-prose a {
+  color: var(--color-gold);
+  text-underline-offset: 4px;
+  text-decoration: underline;
+}
+.legal-prose strong {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+.legal-prose ul {
+  margin-top: 1rem;
+  list-style: none;
+}
+.legal-prose ul li {
+  position: relative;
+  padding-left: 1.4rem;
+}
+.legal-prose ul li + li {
+  margin-top: 0.5rem;
+}
+.legal-prose ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.65em;
+  width: 0.55rem;
+  height: 1px;
+  background-color: var(--color-gold);
+}
+.legal-prose ol {
+  margin-top: 1rem;
+  padding-left: 1.3rem;
+  list-style: decimal;
+}
+.legal-prose ol li + li {
+  margin-top: 0.5rem;
+}
+
 /* Respect users who prefer less motion — disable all decorative movement. */
 @media (prefers-reduced-motion: reduce) {
   html {
