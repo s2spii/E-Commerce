@@ -27,7 +27,7 @@ export const mfaDisableSchema = z.object({ password: z.string().min(1) });
 
 const baseCookie: CookieOptions = {
   httpOnly: true,
-  secure: env.isProd, // HTTPS-only in production
+  secure: env.cookieSecure, // HTTPS-only unless explicitly disabled (local HTTP)
   sameSite: 'lax',
   signed: true,
 };

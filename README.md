@@ -102,6 +102,7 @@ Toutes les variables sont documentées dans [`.env.example`](./.env.example). Le
 | `TAX_HOME_COUNTRY`                        | Pays du vendeur (déterminant fiscal). Défaut `FR`.   |
 | `TAX_PRICES_INCLUDE_TAX`                  | `true` si les prix catalogue sont TTC.               |
 | `CORS_ORIGINS`                            | Origines autorisées (séparées par des virgules).     |
+| `COOKIE_SECURE`                           | Drapeau `Secure` des cookies. Vide = suit `NODE_ENV` ; `false` pour le HTTP local. |
 
 > En production, l'API **refuse de démarrer** si les secrets sont absents, trop courts ou
 > laissés à leur valeur d'exemple. Injectez les secrets via un coffre (Vault, AWS/GCP Secrets
