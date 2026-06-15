@@ -89,7 +89,8 @@ psql "$RESTORE_URL" < backup.sql                # restauration de vérification
 
 ## 9. Checklist de release
 
-- [ ] CI verte (lint, typecheck, tests, `npm audit --omit=dev`, SBOM, CodeQL).
+- [ ] CI verte (lint, typecheck, tests, `npm audit --omit=dev`, SBOM).
+- [ ] Code scanning **CodeQL** actif (GitHub *default setup*) sans alerte non triée.
 - [ ] Secrets de production en place (coffre), distincts par environnement.
 - [ ] Migrations testées sur une copie de staging.
 - [ ] Sauvegarde fraîche + restauration vérifiée.
