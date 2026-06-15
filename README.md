@@ -118,6 +118,7 @@ Voir [`docs/SECURITY.md`](./docs/SECURITY.md) pour le détail. En résumé :
 - **Rate limiting** sur login, MFA et endpoints sensibles ; verrouillage anti-bruteforce.
 - Validation **Zod** côté serveur ; Helmet, CORS strict, HPP, corps de requête bornés.
 - Cookies **HttpOnly / Secure / SameSite** ; gestion d'erreurs qui ne fuit aucun interne.
+- **Protection CSRF** par token double-submit (`x-csrf-token`) sur les mutations par cookie.
 - **Journaux d'audit** sur connexions, commandes, remboursements et actions admin.
 
 ## 7. Fiscalité / TVA

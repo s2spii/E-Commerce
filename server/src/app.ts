@@ -9,6 +9,7 @@ import pinoHttp from 'pino-http';
 import { env } from './config/env';
 import { logger } from './lib/logger';
 import { globalLimiter } from './middleware/rateLimit';
+import { csrfProtection } from './middleware/csrf';
 import { errorHandler, notFoundHandler } from './middleware/error';
 import { apiRouter } from './routes';
 
@@ -66,6 +67,9 @@ export function createApp(): Express {
 
   // Baseline rate limiting across the whole API.
   app.use(globalLimiter);
+
+  // CSRF protection (double-submit cookie) for cookie-authenticated requests.
+  app.use(csrfProtection);
 
   app.use('/api', apiRouter);
 

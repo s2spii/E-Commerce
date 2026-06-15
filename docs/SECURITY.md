@@ -37,7 +37,7 @@ configuration attendue en production.
 | ---------------------- | --------------------------------------------------------------------- |
 | Injection SQL          | **Prisma** (requêtes paramétrées) ; pas de SQL concaténé.             |
 | XSS                    | API JSON ; React échappe par défaut ; en-têtes Helmet.                |
-| CSRF                   | Cookies **SameSite** (`lax`/`strict`) + CORS allow-list + Bearer.     |
+| CSRF                   | **Token double-submit** (`x-csrf-token` ↔ cookie `csrf_token`) sur les mutations par cookie ; SameSite (`lax`/`strict`) + CORS allow-list ; clients Bearer exemptés. |
 | Validation             | **Zod** sur `body`/`query`/`params` ; les valeurs parsées remplacent l'entrée brute. |
 | HPP                    | Middleware `hpp` (pollution de paramètres HTTP).                      |
 | Payloads volumineux    | Corps de requête **bornés** (100 ko) — atténuation DoS.               |

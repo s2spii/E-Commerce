@@ -17,6 +17,12 @@ apiRouter.get('/health', (_req: Request, res: Response) => {
   res.json({ status: 'ok', uptime: process.uptime(), timestamp: new Date().toISOString() });
 });
 
+// CSRF token priming: the csrf middleware sets the `csrf_token` cookie on this
+// (safe) request so the SPA can read and resubmit it on state-changing calls.
+apiRouter.get('/csrf', (_req: Request, res: Response) => {
+  res.json({ data: { ok: true } });
+});
+
 // Readiness — verifies the database is reachable.
 apiRouter.get(
   '/health/ready',
