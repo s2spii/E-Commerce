@@ -83,6 +83,7 @@ configuration attendue en production.
 
 - `npm audit --omit=dev --audit-level=high` en CI (build cassé si vulnérabilité haute en prod).
 - **SBOM** CycloneDX généré et archivé à chaque build.
+- **CodeQL** : analyse statique (SAST) via le *default setup* GitHub, sur chaque push/PR.
 - Lockfile commité ; installations reproductibles.
 - Images Docker multi-stage exécutées en **utilisateur non-root**.
 - Dependabot pour les mises à jour de sécurité (voir `.github/dependabot.yml`).
