@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------------------------------------------------------
+   Maison Luma — base premium styles
+   --------------------------------------------------------------------------- */
+
+@layer base {
+  :root {
+    --color-ivory: #faf8f4;
+    --color-ink: #1a1a1a;
+    --color-gold: #b8924a;
+    --color-line: #e7e2d8;
+    --color-muted: #6b6b6b;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-ivory);
+    color: var(--color-ink);
+    font-family: var(--font-sans), system-ui, sans-serif;
+    line-height: 1.6;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-serif), Georgia, serif;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+
+  /* Accessible focus ring in the brand accent. */
+  *:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: rgba(184, 146, 74, 0.18);
+  }
+}
+
+@layer components {
+  /* Centered page container with consistent gutters. */
+  .container-luxe {
+    @apply mx-auto w-full max-w-container px-5 sm:px-8 lg:px-12;
+  }
+
+  /* Thin uppercase label used for eyebrows and section kickers. */
+  .eyebrow {
+    @apply text-xs uppercase tracking-widest text-gold;
+  }
+
+  /* Underline-on-hover navigation link. */
+  .nav-link {
+    @apply relative text-sm tracking-wide text-ink transition-colors duration-300 hover:text-gold;
+  }
+
+  /* Standard form input. */
+  .input-luxe {
+    @apply w-full border border-line bg-surface px-4 py-3 text-sm text-ink transition-colors focus:border-gold focus:outline-none;
+  }
+
+  /* Standard form select. */
+  .select-luxe {
+    @apply w-full border border-line bg-surface px-4 py-3 text-sm text-ink transition-colors focus:border-gold focus:outline-none;
+  }
+}
+
+/* Hide number-input spinners for a cleaner UI. */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+}
