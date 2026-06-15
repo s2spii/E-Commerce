@@ -69,7 +69,7 @@ commandes/paiements/retours, promotions, taxation, CMS et audit. Points de conce
 
 ## Frontend
 
-Next.js 14 (App Router). Les données dynamiques sont récupérées **côté client** avec les
+Next.js 15 (App Router). Les données dynamiques sont récupérées **côté client** avec les
 cookies (`credentials: 'include'`), ce qui :
 
 - garde l'API comme **source unique de vérité** (tarification/TVA recalculées serveur) ;

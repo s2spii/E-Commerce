@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { api, ApiError, formatDate, formatPrice } from '@/lib/api';
 import type { OrderDetail } from '@/lib/types';
 import { useRequireAuth } from '@/lib/useRequireAuth';
@@ -10,8 +10,8 @@ import { EmptyState } from '@/components/EmptyState';
 import { Button } from '@/components/Button';
 import { OrderStatusBadge } from '@/components/OrderStatusBadge';
 
-export default function OrderDetailPage({ params }: { params: { id: string } }) {
-  const { id } = params;
+export default function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
   const { profile, loading: authLoading } = useRequireAuth();
 
   const [order, setOrder] = useState<OrderDetail | null>(null);

@@ -18,7 +18,7 @@ sur une base technique solide, maintenable et scalable. Le projet est un **monor
 | Dossier   | Rôle                                                                 |
 | --------- | ------------------------------------------------------------------- |
 | `server/` | API REST sécurisée (Express + TypeScript), Prisma/PostgreSQL.       |
-| `web/`    | Vitrine premium + espace client + back-office (Next.js 14).         |
+| `web/`    | Vitrine premium + espace client + back-office (Next.js 15).         |
 | `docs/`   | Architecture, sécurité, fiscalité, référence d'API.                 |
 
 > Les montants monétaires sont stockés et calculés en **centimes (entiers)** pour éliminer
@@ -45,7 +45,7 @@ sur une base technique solide, maintenable et scalable. Le projet est un **monor
 
 - **Backend** : Node.js 20, Express, TypeScript, Prisma ORM, PostgreSQL, Redis (optionnel),
   Zod (validation), Argon2id, JWT, otplib (TOTP), Pino (logs), Vitest (tests).
-- **Frontend** : Next.js 14 (App Router), React 18, TypeScript, Tailwind CSS.
+- **Frontend** : Next.js 15 (App Router), React 18, TypeScript, Tailwind CSS.
 - **Infra** : Docker / Docker Compose, GitHub Actions (CI sécurisée + SBOM).
 
 ## 4. Démarrage rapide

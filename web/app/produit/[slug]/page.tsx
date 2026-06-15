@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { use, useEffect, useMemo, useState } from 'react';
 import { api, ApiError, formatDate } from '@/lib/api';
 import type { ProductDetail, Variant } from '@/lib/types';
 import { Price } from '@/components/Price';
@@ -12,8 +12,8 @@ import { PageSpinner } from '@/components/Spinner';
 import { EmptyState } from '@/components/EmptyState';
 import { useCart } from '@/context/CartContext';
 
-export default function ProductPage({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+export default function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = use(params);
   const { addItem } = useCart();
 
   const [product, setProduct] = useState<ProductDetail | null>(null);
