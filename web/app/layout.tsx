@@ -8,6 +8,7 @@ import { ScrollProgress } from '@/components/ScrollProgress';
 import { CartDrawer } from '@/components/CartDrawer';
 import { CookieBanner } from '@/components/CookieBanner';
 import { BackToTop } from '@/components/BackToTop';
+import { JsonLd } from '@/components/JsonLd';
 import { AuthProvider } from '@/context/AuthContext';
 import { CartProvider } from '@/context/CartContext';
 import { CartUIProvider } from '@/context/CartUIContext';
@@ -64,10 +65,35 @@ export const viewport: Viewport = {
   themeColor: '#0E0C0A',
 };
 
+const ORGANIZATION_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Maison Luma',
+  url: SITE_URL,
+  logo: `${SITE_URL}/icon.svg`,
+  description: SITE_DESCRIPTION,
+  sameAs: ['https://instagram.com', 'https://pinterest.com'],
+};
+
+const WEBSITE_LD = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Maison Luma',
+  url: SITE_URL,
+  inLanguage: 'fr-FR',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: `${SITE_URL}/boutique?q={search_term_string}`,
+    'query-input': 'required name=search_term_string',
+  },
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr" className={`${serif.variable} ${sans.variable}`}>
       <body className="flex min-h-screen flex-col">
+        <JsonLd data={ORGANIZATION_LD} />
+        <JsonLd data={WEBSITE_LD} />
         <AuthProvider>
           <CartProvider>
             <CartUIProvider>

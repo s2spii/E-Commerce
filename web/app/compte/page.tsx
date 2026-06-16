@@ -50,6 +50,13 @@ export default function AccountPage() {
               Voir mes commandes
             </Button>
           </div>
+          <div className="rounded-3xl border border-line bg-surface p-8 shadow-soft">
+            <h3 className="mb-4 text-xl">Mes favoris</h3>
+            <p className="mb-5 text-sm text-muted">Retrouvez les pièces que vous avez mises de côté.</p>
+            <Button href="/favoris" variant="secondary" fullWidth>
+              Voir mes favoris
+            </Button>
+          </div>
           <Button onClick={handleLogout} variant="ghost" fullWidth>
             Se déconnecter
           </Button>

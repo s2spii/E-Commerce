@@ -284,6 +284,26 @@ input[type='number'] {
 .legal-prose ol li + li {
   margin-top: 0.5rem;
 }
+.legal-prose table {
+  width: 100%;
+  margin-top: 1.5rem;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+.legal-prose th,
+.legal-prose td {
+  border: 1px solid var(--color-line);
+  padding: 0.65rem 0.9rem;
+  text-align: left;
+}
+.legal-prose thead th {
+  background-color: var(--color-sand);
+  color: var(--color-ink);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.7rem;
+}
 
 /* Respect users who prefer less motion — disable all decorative movement. */
 @media (prefers-reduced-motion: reduce) {

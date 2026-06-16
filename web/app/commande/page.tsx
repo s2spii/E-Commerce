@@ -117,7 +117,7 @@ export default function CheckoutPage() {
 
       // 3) The cart is now converted; reset our local cart state.
       await refresh();
-      router.push(`/compte/commandes/${order.id}`);
+      router.push(`/compte/commandes/${order.id}?placed=1`);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'La commande n’a pas pu être finalisée.');
       setSubmitting(false);

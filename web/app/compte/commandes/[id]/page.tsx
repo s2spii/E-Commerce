@@ -17,6 +17,12 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   const [order, setOrder] = useState<OrderDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [placed, setPlaced] = useState(false);
+
+  // Celebrate a freshly placed order (flag set by the checkout redirect).
+  useEffect(() => {
+    setPlaced(new URLSearchParams(window.location.search).get('placed') === '1');
+  }, []);
 
   useEffect(() => {
     if (!profile) return;
@@ -60,6 +66,23 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
 
   return (
     <div className="container-luxe py-14">
+      {placed ? (
+        <div className="animate-fade-up mb-10 flex items-center gap-5 rounded-3xl border border-gold/30 bg-gold/5 p-6 shadow-soft">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gold-gradient text-noir">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+              <path d="M20 6 9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </span>
+          <div>
+            <h2 className="font-serif text-2xl">Merci pour votre commande&nbsp;!</h2>
+            <p className="mt-1 text-sm text-muted">
+              Votre commande {order.number} est confirmée. Un e-mail récapitulatif vous a été
+              envoyé.
+            </p>
+          </div>
+        </div>
+      ) : null}
+
       <Link
         href="/compte/commandes"
         className="mb-8 inline-block text-xs uppercase tracking-widest text-muted hover:text-gold"
