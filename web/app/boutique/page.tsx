@@ -19,6 +19,7 @@ interface Filters {
   minPrice: string;
   maxPrice: string;
   inStock: boolean;
+  featured: boolean;
   sort: Sort;
   page: number;
 }
@@ -29,9 +30,18 @@ const DEFAULT_FILTERS: Filters = {
   minPrice: '',
   maxPrice: '',
   inStock: false,
+  featured: false,
   sort: 'newest',
   page: 1,
 };
+
+// Quick price-range presets (in euros; empty string = open-ended).
+const PRICE_PRESETS: { label: string; min: string; max: string }[] = [
+  { label: 'Moins de 100 €', min: '', max: '100' },
+  { label: '100 – 300 €', min: '100', max: '300' },
+  { label: '300 – 600 €', min: '300', max: '600' },
+  { label: 'Plus de 600 €', min: '600', max: '' },
+];
 
 function filtersFromParams(params: URLSearchParams): Filters {
   const sort = params.get('sort');
@@ -41,6 +51,7 @@ function filtersFromParams(params: URLSearchParams): Filters {
     minPrice: params.get('minPrice') ?? '',
     maxPrice: params.get('maxPrice') ?? '',
     inStock: params.get('inStock') === 'true',
+    featured: params.get('featured') === 'true',
     sort: sort === 'name' || sort === 'featured' ? sort : 'newest',
     page: Math.max(1, Number(params.get('page')) || 1),
   };
@@ -84,6 +95,7 @@ function BoutiqueContent() {
       if (next.minPrice) sp.set('minPrice', next.minPrice);
       if (next.maxPrice) sp.set('maxPrice', next.maxPrice);
       if (next.inStock) sp.set('inStock', 'true');
+      if (next.featured) sp.set('featured', 'true');
       if (next.sort !== 'newest') sp.set('sort', next.sort);
       if (next.page > 1) sp.set('page', String(next.page));
       const qs = sp.toString();
@@ -106,6 +118,7 @@ function BoutiqueContent() {
             minPrice: filters.minPrice ? Number(filters.minPrice) * 100 : undefined,
             maxPrice: filters.maxPrice ? Number(filters.maxPrice) * 100 : undefined,
             inStock: filters.inStock ? true : undefined,
+            featured: filters.featured ? true : undefined,
             sort: filters.sort,
             page: filters.page,
             pageSize: 12,
@@ -147,6 +160,7 @@ function BoutiqueContent() {
           filters.minPrice ||
           filters.maxPrice ||
           filters.inStock ||
+          filters.featured ||
           filters.sort !== 'newest',
       ),
     [filters],
@@ -243,6 +257,25 @@ function BoutiqueContent() {
                 className="w-full rounded-xl border border-line bg-surface px-3 py-2.5 text-sm shadow-sm transition-all focus:border-gold focus:outline-none"
               />
             </div>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {PRICE_PRESETS.map((p) => {
+                const activePreset = filters.minPrice === p.min && filters.maxPrice === p.max;
+                return (
+                  <button
+                    key={p.label}
+                    type="button"
+                    onClick={() => update({ minPrice: p.min, maxPrice: p.max })}
+                    className={`rounded-full border px-3 py-1.5 text-xs transition-colors ${
+                      activePreset
+                        ? 'border-gold bg-gold/10 text-gold'
+                        : 'border-line text-muted hover:border-ink hover:text-ink'
+                    }`}
+                  >
+                    {p.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           <label className="flex cursor-pointer items-center gap-3 text-sm text-ink">
@@ -253,6 +286,16 @@ function BoutiqueContent() {
               className="h-4 w-4 accent-gold"
             />
             En stock uniquement
+          </label>
+
+          <label className="flex cursor-pointer items-center gap-3 text-sm text-ink">
+            <input
+              type="checkbox"
+              checked={filters.featured}
+              onChange={(e) => update({ featured: e.target.checked })}
+              className="h-4 w-4 accent-gold"
+            />
+            Pièces en vedette
           </label>
 
           {hasActiveFilters ? (
@@ -287,6 +330,9 @@ function BoutiqueContent() {
               ) : null}
               {filters.inStock ? (
                 <Chip label="En stock" onRemove={() => update({ inStock: false })} />
+              ) : null}
+              {filters.featured ? (
+                <Chip label="En vedette" onRemove={() => update({ featured: false })} />
               ) : null}
               {filters.sort !== 'newest' ? (
                 <Chip

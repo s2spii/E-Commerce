@@ -112,6 +112,42 @@ export async function listCategories() {
   });
 }
 
+/**
+ * Creates (or updates) the authenticated user's review for a product. Reviews
+ * are held for moderation (`isApproved: false`) before appearing publicly.
+ * The unique [productId, userId] constraint means one review per user/product.
+ */
+export async function createReview(
+  slug: string,
+  userId: string,
+  input: { rating: number; title?: string; body?: string },
+) {
+  const product = await prisma.product.findFirst({
+    where: { slug, status: 'ACTIVE' },
+    select: { id: true },
+  });
+  if (!product) throw new NotFoundError('Produit introuvable');
+
+  return prisma.review.upsert({
+    where: { productId_userId: { productId: product.id, userId } },
+    create: {
+      productId: product.id,
+      userId,
+      rating: input.rating,
+      title: input.title,
+      body: input.body,
+      isApproved: false,
+    },
+    update: {
+      rating: input.rating,
+      title: input.title,
+      body: input.body,
+      isApproved: false,
+    },
+    select: { id: true, rating: true, title: true, body: true, isApproved: true, createdAt: true },
+  });
+}
+
 // --- Admin catalog writes ----------------------------------------------------
 
 export interface CreateProductInput {

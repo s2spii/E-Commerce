@@ -8,6 +8,7 @@ import { useCartUI } from '@/context/CartUIContext';
 import { useAuth } from '@/context/AuthContext';
 import { useWishlist } from '@/context/WishlistContext';
 import { SearchOverlay } from '@/components/SearchOverlay';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 const NAV_LINKS = [
   { href: '/boutique', label: 'Boutique' },
@@ -70,8 +71,8 @@ export function Header() {
     <header
       className={`sticky top-0 z-40 border-b transition-all duration-500 ease-spring ${
         scrolled
-          ? 'border-line/80 bg-ivory/85 shadow-soft backdrop-blur-xl'
-          : 'border-transparent bg-ivory/40 backdrop-blur-md'
+          ? 'border-line/80 bg-base/85 shadow-soft backdrop-blur-xl'
+          : 'border-transparent bg-base/40 backdrop-blur-md'
       }`}
     >
       <div
@@ -136,6 +137,7 @@ export function Header() {
           >
             <SearchIcon />
           </button>
+          <ThemeToggle />
           <Link
             href="/favoris"
             className="relative hidden text-ink transition-colors hover:text-gold sm:inline-flex"
@@ -179,7 +181,7 @@ export function Header() {
 
       {/* Mobile nav drawer */}
       <div
-        className={`overflow-hidden border-line bg-ivory/95 backdrop-blur-xl transition-all duration-500 ease-spring md:hidden ${
+        className={`overflow-hidden border-line bg-base/95 backdrop-blur-xl transition-all duration-500 ease-spring md:hidden ${
           open ? 'max-h-80 border-t opacity-100' : 'max-h-0 opacity-0'
         }`}
       >

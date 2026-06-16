@@ -16,6 +16,27 @@ const PROMISES = [
   { title: 'Service dédié', text: 'Un conseil personnalisé par nos artisans' },
 ];
 
+const TESTIMONIALS = [
+  {
+    quote:
+      'Une qualité de fabrication rare. Chaque pièce reçue dépasse mes attentes — l’emballage est une expérience en soi.',
+    author: 'Camille R.',
+    role: 'Cliente depuis 2023',
+  },
+  {
+    quote:
+      'Le souci du détail est partout, du site jusqu’au service client. On sent une véritable maison derrière.',
+    author: 'Antoine M.',
+    role: 'Paris',
+  },
+  {
+    quote:
+      'Des matières nobles et un style intemporel. Je n’achète plus que des pièces qui durent, et Maison Luma l’a compris.',
+    author: 'Inès B.',
+    role: 'Cliente fidèle',
+  },
+];
+
 export default function HomePage() {
   return (
     <>
@@ -59,14 +80,14 @@ export default function HomePage() {
             className="animate-fade-up mt-10 flex flex-wrap justify-center gap-4"
             style={{ animationDelay: '0.55s' }}
           >
-            <Button href="/boutique" size="lg" className="!bg-ivory !text-ink hover:!text-ink">
+            <Button href="/boutique" size="lg" className="!bg-ivory !text-noir hover:!text-noir">
               Explorer la collection
             </Button>
             <Button
               href="/notre-maison"
               size="lg"
               variant="secondary"
-              className="!border-ivory/50 !text-ivory hover:!text-ink"
+              className="!border-ivory/50 !text-ivory hover:!text-noir"
             >
               Notre histoire
             </Button>
@@ -147,6 +168,37 @@ export default function HomePage() {
             </Button>
           </div>
         </Reveal>
+      </section>
+
+      {/* Testimonials */}
+      <section className="bg-sand/60 py-24">
+        <div className="container-luxe">
+          <Reveal className="mb-12 text-center">
+            <span className="eyebrow eyebrow-center before:hidden">Ils nous font confiance</span>
+            <h2 className="mt-4 text-4xl sm:text-5xl">Paroles de clients</h2>
+          </Reveal>
+          <div className="grid gap-6 md:grid-cols-3">
+            {TESTIMONIALS.map((t, i) => (
+              <Reveal key={t.author} delay={i * 120}>
+                <figure className="card-luxe flex h-full flex-col p-8">
+                  <span aria-hidden className="font-serif text-5xl leading-none text-gold">
+                    “
+                  </span>
+                  <span className="mt-1 text-sm text-gold">★★★★★</span>
+                  <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-ink">
+                    {t.quote}
+                  </blockquote>
+                  <figcaption className="mt-6 border-t border-line pt-4">
+                    <span className="block font-serif text-lg text-ink">{t.author}</span>
+                    <span className="block text-xs uppercase tracking-widest text-muted">
+                      {t.role}
+                    </span>
+                  </figcaption>
+                </figure>
+              </Reveal>
+            ))}
+          </div>
+        </div>
       </section>
 
       <Newsletter />

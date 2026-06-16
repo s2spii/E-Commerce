@@ -49,7 +49,7 @@ export function WishlistButton({ product, variant = 'chip', className = '' }: Wi
       onClick={onClick}
       aria-pressed={active}
       aria-label={active ? 'Retirer des favoris' : 'Ajouter aux favoris'}
-      className={`flex h-9 w-9 items-center justify-center rounded-full bg-ivory/90 text-ink shadow-soft backdrop-blur transition-all duration-300 hover:scale-110 hover:text-gold ${
+      className={`flex h-9 w-9 items-center justify-center rounded-full bg-base/90 text-ink shadow-soft backdrop-blur transition-all duration-300 hover:scale-110 hover:text-gold ${
         active ? 'text-gold' : ''
       } ${className}`}
     >

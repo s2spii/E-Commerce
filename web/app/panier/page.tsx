@@ -169,7 +169,7 @@ export default function CartPage() {
                   value={couponInput}
                   onChange={(e) => setCouponInput(e.target.value)}
                   placeholder="Votre code"
-                  className="flex-1 rounded-xl border border-line bg-ivory px-4 py-2.5 text-sm uppercase tracking-wide transition-all focus:border-gold focus:outline-none"
+                  className="flex-1 rounded-xl border border-line bg-base px-4 py-2.5 text-sm uppercase tracking-wide transition-all focus:border-gold focus:outline-none"
                 />
                 <Button size="sm" onClick={handleApplyCoupon} disabled={couponBusy}>
                   Appliquer

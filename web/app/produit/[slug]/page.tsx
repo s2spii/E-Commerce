@@ -13,11 +13,18 @@ import { EmptyState } from '@/components/EmptyState';
 import { Reveal } from '@/components/Reveal';
 import { Lightbox } from '@/components/Lightbox';
 import { WishlistButton } from '@/components/WishlistButton';
+import { ShareButton } from '@/components/ShareButton';
+import { CompareButton } from '@/components/CompareButton';
 import { Accordion } from '@/components/Accordion';
 import { RecentlyViewed } from '@/components/RecentlyViewed';
+import { RelatedProducts } from '@/components/RelatedProducts';
+import { ReviewForm } from '@/components/ReviewForm';
+import { JsonLd } from '@/components/JsonLd';
 import { useCart } from '@/context/CartContext';
 import { useCartUI } from '@/context/CartUIContext';
 import { useRecentlyViewed } from '@/lib/useRecentlyViewed';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://maisonluma.example';
 
 export default function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
@@ -128,8 +135,70 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
   const displayPrice = selectedVariant?.price ?? product.variants[0]?.price ?? null;
   const outOfStock = selectedVariant ? selectedVariant.stock <= 0 : true;
 
+  const saved = {
+    id: product.id,
+    slug: product.slug,
+    name: product.name,
+    image: product.images[0]?.url ?? null,
+    brand: product.brand,
+    fromPrice: product.variants[0]?.price ?? null,
+    currency: product.currency,
+  };
+
+  const productLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    image: product.images.map((i) => i.url).filter(Boolean),
+    ...(product.description ? { description: product.description } : {}),
+    ...(product.brand ? { brand: { '@type': 'Brand', name: product.brand } } : {}),
+    sku: selectedVariant?.sku ?? product.variants[0]?.sku,
+    offers: {
+      '@type': 'Offer',
+      price: ((displayPrice ?? 0) / 100).toFixed(2),
+      priceCurrency: product.currency,
+      availability: outOfStock ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
+      url: `${SITE_URL}/produit/${product.slug}`,
+    },
+    ...(averageRating != null
+      ? {
+          aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: averageRating.toFixed(1),
+            reviewCount: product.reviews.length,
+          },
+        }
+      : {}),
+  };
+
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Accueil', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Boutique', item: `${SITE_URL}/boutique` },
+      ...(product.category
+        ? [
+            {
+              '@type': 'ListItem',
+              position: 3,
+              name: product.category.name,
+              item: `${SITE_URL}/boutique?category=${product.category.slug}`,
+            },
+          ]
+        : []),
+      {
+        '@type': 'ListItem',
+        position: product.category ? 4 : 3,
+        name: product.name,
+      },
+    ],
+  };
+
   return (
     <div className="container-luxe py-10">
+      <JsonLd data={productLd} />
+      <JsonLd data={breadcrumbLd} />
       <nav className="mb-8 text-xs uppercase tracking-widest text-muted">
         <Link href="/boutique" className="hover:text-gold">
           Boutique
@@ -169,7 +238,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
               </div>
             )}
             {images[activeImage]?.url ? (
-              <span className="absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-ivory/90 text-ink opacity-0 shadow-soft backdrop-blur transition-opacity duration-300 group-hover:opacity-100">
+              <span className="absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-base/90 text-ink opacity-0 shadow-soft backdrop-blur transition-opacity duration-300 group-hover:opacity-100">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
                   <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
@@ -229,7 +298,15 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
           {/* Variant selector */}
           {product.variants.length > 0 ? (
             <div className="mt-8">
-              <span className="eyebrow mb-3 block">Variante</span>
+              <div className="mb-3 flex items-center justify-between">
+                <span className="eyebrow">Variante</span>
+                <Link
+                  href="/guide-des-tailles"
+                  className="text-xs uppercase tracking-widest text-muted underline-offset-4 transition-colors hover:text-gold hover:underline"
+                >
+                  Guide des tailles
+                </Link>
+              </div>
               <div className="flex flex-wrap gap-3">
                 {product.variants.map((v) => {
                   const disabled = v.stock <= 0;
@@ -292,18 +369,13 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
                 </>
               )}
             </Button>
-            <WishlistButton
-              variant="pill"
-              product={{
-                id: product.id,
-                slug: product.slug,
-                name: product.name,
-                image: product.images[0]?.url ?? null,
-                brand: product.brand,
-                fromPrice: product.variants[0]?.price ?? null,
-                currency: product.currency,
-              }}
-            />
+          </div>
+
+          {/* Secondary actions */}
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            <WishlistButton variant="pill" product={saved} />
+            <ShareButton title={product.name} />
+            <CompareButton product={saved} />
           </div>
 
           {cartError ? <p className="mt-4 text-sm text-red-700">{cartError}</p> : null}
@@ -370,7 +442,13 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
             ))}
           </ul>
         )}
+
+        <div className="mt-12">
+          <ReviewForm slug={slug} />
+        </div>
       </Reveal>
+
+      <RelatedProducts categorySlug={product.category?.slug} currentId={product.id} />
 
       <RecentlyViewed currentId={product.id} />
 

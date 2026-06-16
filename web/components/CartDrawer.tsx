@@ -91,7 +91,7 @@ export function CartDrawer() {
         role="dialog"
         aria-modal="true"
         aria-label="Votre panier"
-        className={`absolute right-0 top-0 flex h-full w-full max-w-md flex-col bg-ivory shadow-lift transition-transform duration-500 ease-spring ${
+        className={`absolute right-0 top-0 flex h-full w-full max-w-md flex-col bg-base shadow-lift transition-transform duration-500 ease-spring ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >

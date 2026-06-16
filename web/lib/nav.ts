@@ -10,6 +10,7 @@ export const SERVICE_LINKS: NavLink[] = [
   { href: '/faq', label: 'FAQ' },
   { href: '/livraison', label: 'Livraison & suivi' },
   { href: '/retours', label: 'Retours & remboursements' },
+  { href: '/guide-des-tailles', label: 'Guide des tailles' },
 ];
 
 export const LEGAL_LINKS: NavLink[] = [

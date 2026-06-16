@@ -14,18 +14,23 @@ const config: Config = {
     './components/**/*.{ts,tsx}',
     './context/**/*.{ts,tsx}',
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        ivory: '#FAF7F1',
-        surface: '#FFFFFF',
-        sand: '#F2ECE1',
-        ink: '#1A1714',
-        noir: '#0E0C0A',
-        muted: '#736B5E',
-        gold: '#B8924A',
-        champagne: '#E2C892',
-        line: '#E8E1D4',
+        // Theme-aware tokens (light/dark) and fixed brand tokens, all bound to
+        // CSS variables in globals.css. The `<alpha-value>` channel keeps the
+        // /opacity utilities (e.g. bg-ink/40) working.
+        base: 'rgb(var(--c-base) / <alpha-value>)',
+        ivory: 'rgb(var(--c-ivory) / <alpha-value>)',
+        surface: 'rgb(var(--c-surface) / <alpha-value>)',
+        sand: 'rgb(var(--c-sand) / <alpha-value>)',
+        ink: 'rgb(var(--c-ink) / <alpha-value>)',
+        noir: 'rgb(var(--c-noir) / <alpha-value>)',
+        muted: 'rgb(var(--c-muted) / <alpha-value>)',
+        gold: 'rgb(var(--c-gold) / <alpha-value>)',
+        champagne: 'rgb(var(--c-champagne) / <alpha-value>)',
+        line: 'rgb(var(--c-line) / <alpha-value>)',
       },
       fontFamily: {
         // Bound to next/font CSS variables (see app/layout.tsx).
