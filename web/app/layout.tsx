@@ -8,12 +8,14 @@ import { ScrollProgress } from '@/components/ScrollProgress';
 import { CartDrawer } from '@/components/CartDrawer';
 import { CookieBanner } from '@/components/CookieBanner';
 import { BackToTop } from '@/components/BackToTop';
+import { CompareBar } from '@/components/CompareBar';
 import { JsonLd } from '@/components/JsonLd';
 import { AuthProvider } from '@/context/AuthContext';
 import { CartProvider } from '@/context/CartContext';
 import { CartUIProvider } from '@/context/CartUIContext';
 import { ToastProvider } from '@/context/ToastContext';
 import { WishlistProvider } from '@/context/WishlistContext';
+import { CompareProvider } from '@/context/CompareContext';
 
 // Serif display for headings, Inter for body/UI. Exposed as CSS variables and
 // wired into the Tailwind theme (see tailwind.config.ts).
@@ -92,6 +94,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr" className={`${serif.variable} ${sans.variable}`}>
       <body className="flex min-h-screen flex-col">
+        <script
+          // No-flash theme init: applies the stored/system theme before paint.
+          dangerouslySetInnerHTML={{
+            __html:
+              "(function(){try{var t=localStorage.getItem('luma-theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.classList.add('dark');}catch(e){}})();",
+          }}
+        />
         <JsonLd data={ORGANIZATION_LD} />
         <JsonLd data={WEBSITE_LD} />
         <AuthProvider>
@@ -99,19 +108,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <CartUIProvider>
               <ToastProvider>
                 <WishlistProvider>
-                  <a href="#contenu" className="skip-link">
-                    Aller au contenu
-                  </a>
-                  <ScrollProgress />
-                  <AnnouncementBar />
-                  <Header />
-                  <main id="contenu" className="flex-1">
-                    {children}
-                  </main>
-                  <Footer />
-                  <CartDrawer />
-                  <CookieBanner />
-                  <BackToTop />
+                  <CompareProvider>
+                    <a href="#contenu" className="skip-link">
+                      Aller au contenu
+                    </a>
+                    <ScrollProgress />
+                    <AnnouncementBar />
+                    <Header />
+                    <main id="contenu" className="flex-1">
+                      {children}
+                    </main>
+                    <Footer />
+                    <CartDrawer />
+                    <CompareBar />
+                    <CookieBanner />
+                    <BackToTop />
+                  </CompareProvider>
                 </WishlistProvider>
               </ToastProvider>
             </CartUIProvider>

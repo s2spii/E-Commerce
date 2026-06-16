@@ -12,6 +12,14 @@ catalogRouter.get('/products', validate({ query: c.productQuerySchema }), asyncH
 catalogRouter.get('/products/:slug', validate({ params: z.object({ slug: z.string() }) }), asyncHandler(c.getProduct));
 catalogRouter.get('/categories', asyncHandler(c.listCategories));
 
+// Authenticated review submission (held for moderation).
+catalogRouter.post(
+  '/products/:slug/reviews',
+  authenticate,
+  validate({ params: z.object({ slug: z.string() }), body: c.createReviewSchema }),
+  asyncHandler(c.createReview),
+);
+
 // Admin catalog management (guarded by RBAC permissions).
 export const adminCatalogRouter = Router();
 adminCatalogRouter.use(authenticate);

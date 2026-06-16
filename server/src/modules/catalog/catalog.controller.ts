@@ -45,6 +45,12 @@ export const createProductSchema = z.object({
 
 export const updateProductSchema = createProductSchema.partial();
 
+export const createReviewSchema = z.object({
+  rating: z.coerce.number().int().min(1).max(5),
+  title: z.string().trim().max(160).optional(),
+  body: z.string().trim().max(4000).optional(),
+});
+
 export const categorySchema = z.object({
   id: z.string().optional(),
   name: z.string().min(2).max(120),
@@ -73,6 +79,11 @@ export async function getProduct(req: Request, res: Response): Promise<void> {
 
 export async function listCategories(_req: Request, res: Response): Promise<void> {
   res.json({ data: await catalog.listCategories() });
+}
+
+export async function createReview(req: Request, res: Response): Promise<void> {
+  const review = await catalog.createReview(req.params.slug!, req.auth!.userId, req.body);
+  res.status(201).json({ data: review });
 }
 
 // --- Admin -------------------------------------------------------------------

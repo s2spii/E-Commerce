@@ -28,7 +28,7 @@ export function ProductCard({ product }: { product: ProductSummary }) {
 
         {/* Hover veil + reveal */}
         <div className="absolute inset-0 bg-gradient-to-t from-noir/55 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-        <span className="absolute inset-x-4 bottom-4 translate-y-3 rounded-full bg-ivory/95 py-2.5 text-center text-[11px] uppercase tracking-widest text-ink opacity-0 shadow-soft backdrop-blur transition-all duration-500 ease-spring group-hover:translate-y-0 group-hover:opacity-100">
+        <span className="absolute inset-x-4 bottom-4 translate-y-3 rounded-full bg-base/95 py-2.5 text-center text-[11px] uppercase tracking-widest text-ink opacity-0 shadow-soft backdrop-blur transition-all duration-500 ease-spring group-hover:translate-y-0 group-hover:opacity-100">
           Découvrir la pièce
         </span>
 

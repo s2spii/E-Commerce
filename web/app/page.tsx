@@ -80,14 +80,14 @@ export default function HomePage() {
             className="animate-fade-up mt-10 flex flex-wrap justify-center gap-4"
             style={{ animationDelay: '0.55s' }}
           >
-            <Button href="/boutique" size="lg" className="!bg-ivory !text-ink hover:!text-ink">
+            <Button href="/boutique" size="lg" className="!bg-ivory !text-noir hover:!text-noir">
               Explorer la collection
             </Button>
             <Button
               href="/notre-maison"
               size="lg"
               variant="secondary"
-              className="!border-ivory/50 !text-ivory hover:!text-ink"
+              className="!border-ivory/50 !text-ivory hover:!text-noir"
             >
               Notre histoire
             </Button>

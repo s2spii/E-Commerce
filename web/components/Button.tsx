@@ -12,9 +12,9 @@ const base =
   'after:pointer-events-none after:absolute after:inset-0 after:-translate-x-full after:bg-gradient-to-r after:from-transparent after:via-white/35 after:to-transparent after:transition-transform after:duration-700 after:ease-luxe hover:after:translate-x-full';
 
 const variants: Record<Variant, string> = {
-  primary: 'bg-ink text-ivory shadow-soft hover:-translate-y-0.5 hover:text-ink hover:shadow-gold',
+  primary: 'bg-noir text-ivory shadow-soft hover:-translate-y-0.5 hover:text-noir hover:shadow-gold',
   secondary:
-    'border border-ink/70 text-ink hover:-translate-y-0.5 hover:border-gold hover:text-ink hover:shadow-gold',
+    'border border-ink/70 text-ink hover:-translate-y-0.5 hover:border-gold hover:text-noir hover:shadow-gold',
   ghost: 'text-ink hover:text-gold before:hidden after:hidden',
 };
 

@@ -95,7 +95,7 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
           open ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'
         }`}
       >
-        <div className="overflow-hidden rounded-2xl border border-line bg-ivory shadow-lift">
+        <div className="overflow-hidden rounded-2xl border border-line bg-base shadow-lift">
           {/* Input */}
           <div className="flex items-center gap-3 border-b border-line px-5">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-muted" aria-hidden>

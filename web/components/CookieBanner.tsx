@@ -43,7 +43,7 @@ export function CookieBanner() {
       aria-hidden={!visible}
     >
       <div className="container-luxe pb-5">
-        <div className="flex flex-col gap-4 rounded-2xl border border-line bg-ivory/95 p-5 shadow-lift backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+        <div className="flex flex-col gap-4 rounded-2xl border border-line bg-base/95 p-5 shadow-lift backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between sm:gap-6">
           <p className="text-sm text-muted">
             Nous utilisons des cookies pour améliorer votre expérience et analyser notre trafic. En
             poursuivant, vous acceptez notre{' '}
@@ -63,7 +63,7 @@ export function CookieBanner() {
             <button
               type="button"
               onClick={() => decide('accepted')}
-              className="group relative overflow-hidden rounded-full bg-ink px-6 py-2.5 text-xs uppercase tracking-widest text-ivory transition-all hover:-translate-y-0.5 hover:text-ink"
+              className="group relative overflow-hidden rounded-full bg-noir px-6 py-2.5 text-xs uppercase tracking-widest text-ivory transition-all hover:-translate-y-0.5 hover:text-noir"
             >
               <span className="relative z-10">Accepter</span>
               <span className="absolute inset-0 translate-y-full bg-gold-gradient transition-transform duration-500 ease-spring group-hover:translate-y-0" />

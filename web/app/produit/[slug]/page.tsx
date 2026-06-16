@@ -14,9 +14,11 @@ import { Reveal } from '@/components/Reveal';
 import { Lightbox } from '@/components/Lightbox';
 import { WishlistButton } from '@/components/WishlistButton';
 import { ShareButton } from '@/components/ShareButton';
+import { CompareButton } from '@/components/CompareButton';
 import { Accordion } from '@/components/Accordion';
 import { RecentlyViewed } from '@/components/RecentlyViewed';
 import { RelatedProducts } from '@/components/RelatedProducts';
+import { ReviewForm } from '@/components/ReviewForm';
 import { JsonLd } from '@/components/JsonLd';
 import { useCart } from '@/context/CartContext';
 import { useCartUI } from '@/context/CartUIContext';
@@ -133,6 +135,16 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
   const displayPrice = selectedVariant?.price ?? product.variants[0]?.price ?? null;
   const outOfStock = selectedVariant ? selectedVariant.stock <= 0 : true;
 
+  const saved = {
+    id: product.id,
+    slug: product.slug,
+    name: product.name,
+    image: product.images[0]?.url ?? null,
+    brand: product.brand,
+    fromPrice: product.variants[0]?.price ?? null,
+    currency: product.currency,
+  };
+
   const productLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -226,7 +238,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
               </div>
             )}
             {images[activeImage]?.url ? (
-              <span className="absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-ivory/90 text-ink opacity-0 shadow-soft backdrop-blur transition-opacity duration-300 group-hover:opacity-100">
+              <span className="absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-base/90 text-ink opacity-0 shadow-soft backdrop-blur transition-opacity duration-300 group-hover:opacity-100">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
                   <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
@@ -357,19 +369,13 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
                 </>
               )}
             </Button>
-            <WishlistButton
-              variant="pill"
-              product={{
-                id: product.id,
-                slug: product.slug,
-                name: product.name,
-                image: product.images[0]?.url ?? null,
-                brand: product.brand,
-                fromPrice: product.variants[0]?.price ?? null,
-                currency: product.currency,
-              }}
-            />
+          </div>
+
+          {/* Secondary actions */}
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            <WishlistButton variant="pill" product={saved} />
             <ShareButton title={product.name} />
+            <CompareButton product={saved} />
           </div>
 
           {cartError ? <p className="mt-4 text-sm text-red-700">{cartError}</p> : null}
@@ -436,6 +442,10 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
             ))}
           </ul>
         )}
+
+        <div className="mt-12">
+          <ReviewForm slug={slug} />
+        </div>
       </Reveal>
 
       <RelatedProducts categorySlug={product.category?.slug} currentId={product.id} />

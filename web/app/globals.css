@@ -8,14 +8,42 @@
 
 @layer base {
   :root {
-    --color-ivory: #faf7f1;
-    --color-sand: #f2ece1;
-    --color-ink: #1a1714;
-    --color-noir: #0e0c0a;
-    --color-gold: #b8924a;
-    --color-champagne: #e2c892;
-    --color-line: #e8e1d4;
-    --color-muted: #736b5e;
+    color-scheme: light;
+
+    /* Theme-aware tokens (light values) as "R G B" triplets. */
+    --c-base: 250 247 241;
+    --c-surface: 255 255 255;
+    --c-sand: 242 236 225;
+    --c-ink: 26 23 20;
+    --c-muted: 115 107 94;
+    --c-line: 232 225 212;
+
+    /* Fixed brand tokens (identical in both themes). */
+    --c-ivory: 250 247 241;
+    --c-noir: 14 12 10;
+    --c-gold: 184 146 74;
+    --c-champagne: 226 200 146;
+
+    /* Legacy hex vars used in raw CSS — derived from the triplets. */
+    --color-base: rgb(var(--c-base));
+    --color-ivory: rgb(var(--c-ivory));
+    --color-surface: rgb(var(--c-surface));
+    --color-sand: rgb(var(--c-sand));
+    --color-ink: rgb(var(--c-ink));
+    --color-noir: rgb(var(--c-noir));
+    --color-muted: rgb(var(--c-muted));
+    --color-gold: rgb(var(--c-gold));
+    --color-line: rgb(var(--c-line));
+  }
+
+  .dark {
+    color-scheme: dark;
+    --c-base: 21 18 15;
+    --c-surface: 30 26 22;
+    --c-sand: 36 30 24;
+    --c-ink: 243 239 232;
+    --c-muted: 169 159 142;
+    --c-line: 52 45 37;
   }
 
   html {
@@ -27,10 +55,11 @@
   }
 
   body {
-    background-color: var(--color-ivory);
+    background-color: var(--color-base);
     color: var(--color-ink);
     font-family: var(--font-sans), system-ui, sans-serif;
     line-height: 1.6;
+    transition: background-color 0.4s ease, color 0.4s ease;
     /* A whisper of warmth + grain layered behind the ivory base. */
     background-image:
       radial-gradient(60rem 60rem at 85% -10%, rgba(226, 200, 146, 0.16), transparent 60%),
@@ -210,7 +239,7 @@ input[type='number'] {
   z-index: 100;
   transform: translateY(-160%);
   border-radius: 9999px;
-  background-color: var(--color-ink);
+  background-color: var(--color-noir);
   color: var(--color-ivory);
   padding: 0.6rem 1.1rem;
   font-size: 0.75rem;
