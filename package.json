@@ -23,7 +23,7 @@
     "audit": "npm audit --omit=dev --audit-level=high"
   },
   "devDependencies": {
-    "@cyclonedx/cyclonedx-npm": "^1.19.3",
+    "@cyclonedx/cyclonedx-npm": "^5.0.0",
     "concurrently": "^8.2.2"
   }
 }
